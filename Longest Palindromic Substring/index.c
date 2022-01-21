@@ -37,7 +37,9 @@ char *longestPalindrome(char *s) {
                     result->str[2] = '\0';
                     result->next = (subString *) malloc(sizeof(subString));
                     result->next->prev = result;
+                    result->next->str = NULL;
                     result->next->next = NULL;
+                    result = result->next;
                     continue;
                 }
                 for(int k=i+1,l=j-1;k<j;k++,l--) {
@@ -47,27 +49,31 @@ char *longestPalindrome(char *s) {
                     }
                 }
                 if (child_str_find_flag) {
-                    continue;
-                } else {
                     /*如果檢查到子字串，先記錄，因為不見得是最長*/
                     result->str = (char *) malloc(sizeof(char)*((j-i)+2));
                     strncpy(result->str,&s[i],j-i+1);
-                    result->str[j-i+2] = '\0';
-                    printf("%s\n",result->str);
+                    result->str[j-i+1] = '\0';
                     result->next = (subString*) malloc(sizeof(subString));
                     result->next->prev = result;
+                    result->next->str = NULL;
                     result->next->next = NULL;
                     result = result->next;
-                    break;
+                    continue;
+                } else {
+                    continue;
                 }
             } else {
                 continue;
             }
         }
     }
-    return "fuck";
+    do {
+        printf("%s\n",result->str);
+    } while(result = result->prev);
+    
+    return "hello world";
 }
 int main (void) {
-    printf("%s",longestPalindrome("cbba"));
+    printf("%s",longestPalindrome("abbbbbbbbbbbba"));
     return 0;
 }
