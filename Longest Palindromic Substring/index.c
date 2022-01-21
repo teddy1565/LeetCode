@@ -4,9 +4,31 @@
 char *longestPalindrome(char *s) {
     int leng = strlen(s);
     if (leng == 1) {
-        printf("%s\n",s);
+        return s;
+    } else if (leng == 2) {
+        if (s[0]!=s[1]) {
+            s[1]='\0';
+            return &s[0];
+        }
+    } else {
+        int flag=0;
+        for(int i=0;i<leng;i++) {
+            for (int j=i+1;j<leng;j++){
+                if (s[i]==s[j]) {
+                    flag = 1;
+                    break;
+                }
+            }
+            if (flag) {
+                break;
+            }
+        }
+        if (!flag) {
+            s[1]='\0';
+            return &s[0];
+        }
     }
-    char lut[62];
+    // char lut[62];
     int Index = 0;
     typedef struct subString{
         char *str;
@@ -17,16 +39,16 @@ char *longestPalindrome(char *s) {
     result->next = NULL;
     for (int i=0;i<leng;i++) {
         /*檢查此字元是否被找過了*/
-        int flag = 0;
-        for (int j=0;j<Index;j++) {
-            if (s[i] == lut[j]) {
-                flag = 1;
-                break;
-            }
-        }
-        if (flag) {
-            continue;
-        }
+        // int flag = 0;
+        // for (int j=0;j<Index;j++) {
+        //     if (s[i] == lut[j]) {
+        //         flag = 1;
+        //         break;
+        //     }
+        // }
+        // if (flag) {
+        //     continue;
+        // }
         /*由左至右檢查每一個與當前同字元的子字串*/
         for (int j=i+1;j<leng;j++) {
             int child_str_find_flag = 1;
@@ -67,13 +89,33 @@ char *longestPalindrome(char *s) {
             }
         }
     }
+    char *res = NULL;
+    int BIG=0;
     do {
-        printf("%s\n",result->str);
+        int counter=0;
+        if (result->str==NULL) {
+            continue;
+        }
+        for(;result->str[counter]!='\0';counter++);
+        if (counter > BIG) {
+            free(res);
+            res = (char*) malloc(sizeof(char)*counter+1);
+            strncpy(res,result->str,counter+1);
+            BIG = counter;
+        }
     } while(result = result->prev);
-    
-    return "hello world";
+    if (res==NULL) {
+        free(res);
+        res = (char *) malloc(sizeof(char)*2);
+        res[0]=s[0];
+        res[1]='\0';
+    }
+    return res;
 }
 int main (void) {
-    printf("%s",longestPalindrome("abbbbbbbbbbbba"));
+    char input[1000];
+    while(scanf("%s",input)!=EOF) {
+        printf("%s",longestPalindrome(input));
+    }
     return 0;
 }
