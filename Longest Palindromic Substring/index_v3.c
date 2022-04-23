@@ -18,10 +18,16 @@ char *longestPalindrome(char *s) {
             }
             if (s[i] == s[j]) {
                 int middle = ((j+1)/2);
-                int len = 0;
+                int len = 1;
+                printf("%c",s[middle]);
                 for(int k=1;s[middle+k] == s[middle-k];k++) {
-                    len++;
+                    printf("%c",s[middle-k]);
+                    printf("%c",s[middle+k]);
+                    len+=2;
                 }
+                printf("\n");
+                printf("%d\n",len);
+                break;
             }
         }
     }
@@ -29,6 +35,6 @@ char *longestPalindrome(char *s) {
 }
 
 int main(void) {
-    longestPalindrome("hello world");
+    longestPalindrome("babac");
     return 0;
 }
