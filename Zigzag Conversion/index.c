@@ -53,11 +53,12 @@ char* convert(char* s, int numRows) {
                 
                 if (next_zig_top_header_index - offset == zig_header_index) {
                     continue;
+                } else if (next_zig_top_header_index - offset < source_string_length) {
+                    answer[k] = s[next_zig_top_header_index - offset];
+                    k++;
                 } else if (next_zig_top_header_index > (source_string_length + 1)) {
                     break;
                 }
-                answer[k] = s[next_zig_top_header_index - offset];
-                k++;
             } else {
                 answer[k] = s[zig_header_index];
                 k++;
