@@ -66,8 +66,12 @@ char* convert(char* s, int numRows) {
         }
     }
 
-    for (int i = 0; i < source_string_length; i++) {
-        s[i] = answer[i];
+    for (int i = 0, k = 0; k <= source_string_length; k++) {
+        if (answer[k] == '\0') {
+            continue;
+        }
+        s[i] = answer[k];
+        i++;
     }
 
     s[source_string_length] = '\0';
