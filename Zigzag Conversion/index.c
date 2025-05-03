@@ -38,7 +38,7 @@ char* convert(char* s, int numRows) {
     const int space_size = numRows - 2;
     char *answer = (char*) malloc(sizeof(char) * (source_string_length + 1));
     const int zig_interval_size = space_size + numRows;
-    
+
     int k = 0;
     for (int i=0; i < numRows; i++) {
         for (int zig_header_index = i; zig_header_index < (source_string_length + 1); zig_header_index += zig_interval_size) {
