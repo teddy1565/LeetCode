@@ -56,10 +56,22 @@ bool isMatch(char* s, char* p) {
         if ((s[i] == split_mark_dot && prev == 0) || (s[i] == split_mark_star && prev == 0)) {
             temp_s[temp_s_k] = '\0';
             temp_s_k++;
+            continue;
         }
-        if ((s[i] != split_mark_dot && prev == 1) || (s[i] != split_mark_star && prev == 1)) {
+        if ((s[i] != split_mark_dot && prev == 1) && (s[i] != split_mark_star && prev == 1)) {
             temp_p[temp_p_k] = '\0';
             temp_p_k++;
+            continue;
+        }
+        if (s[i] != split_mark_dot && s[i] != split_mark_star) {
+            temp_s[temp_s_k] = s[i];
+            temp_s_k++;
+            continue;
+        }
+        if (s[i] == split_mark_dot || s[i] == split_mark_star) {
+            temp_p[temp_p_k] = s[i];
+            temp_p_k++;
+            continue;
         }
     }
     
