@@ -51,16 +51,27 @@ bool isMatch(char* s, char* p) {
     // 紀錄暫存的pattern，因為pattern可能不只一個
     char *temp_p = (char*) malloc(sizeof(char) * (source_string_length + 1));
 
+    int s_group_length = 0;
+    int p_group_length = 0;
+
+
     // 使用prev紀錄上一個是屬於string或pattern的狀態, 0表示string, 1表示pattern
-    for (int i = 0, prev = 0, temp_s_k = 0, temp_p_k = 0; i < source_string_length; i++) {
+    for (int i = 0, prev = 0, temp_s_k = 0, temp_p_k = 0; i < source_string_length + 1; i++) {
+        if (s[i] == '\0') {
+            temp_s[temp_s_k] = '\0';
+            temp_p[temp_p_k] = '\0';
+            break;
+        }
         if ((s[i] == split_mark_dot && prev == 0) || (s[i] == split_mark_star && prev == 0)) {
             temp_s[temp_s_k] = '\0';
             temp_s_k++;
+            s_group_length++;
             continue;
         }
         if ((s[i] != split_mark_dot && prev == 1) && (s[i] != split_mark_star && prev == 1)) {
             temp_p[temp_p_k] = '\0';
             temp_p_k++;
+            p_group_length++;
             continue;
         }
         if (s[i] != split_mark_dot && s[i] != split_mark_star) {
@@ -73,6 +84,10 @@ bool isMatch(char* s, char* p) {
             temp_p_k++;
             continue;
         }
+    }
+
+    for (int i=0, j=0; (i < s_group_length) && (j < p_group_length); ) {
+
     }
     
 }
