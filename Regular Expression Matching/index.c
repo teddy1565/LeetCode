@@ -8,6 +8,9 @@
 #include <stdlib.h>
 #include <stdio.h>
 
+// * 意思是指0或多個前導元素
+// . 意思是指任意字元
+
 // @lc code=start
 bool isMatch(char* s, char* p) {
 
