@@ -59,6 +59,11 @@ bool isMatch(char* s, char* p) {
         if (p[i] == '\0') {
             temp_s[temp_s_k] = '\0';
             temp_p[temp_p_k] = '\0';
+            if (prev == 0) {
+                s_group_length++;
+            } else {
+                p_group_length++;
+            }
             break;
         }
         if ((p[i] == split_mark_dot && prev == 0) || (p[i] == split_mark_star && prev == 0)) {
@@ -103,7 +108,7 @@ bool isMatch(char* s, char* p) {
     char *group_pattern_string_shared = (char*) malloc(sizeof(char) * (source_string_length + 1));
 
     // 將分類好的組合對應與解析
-    for (int i=0, j=0; (i <= s_group_length) && (j <= p_group_length); i++, j++) {
+    for (int i=0, j=0; (i <= s_group_length) || (j <= p_group_length); i++, j++) {
         int k = 0, m = 0;
         while(temp_s[i] != '\0') {
             group_source_string_shared[k] = temp_s[i];
