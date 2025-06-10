@@ -21,6 +21,7 @@ int old_main(void) {
     printf("Answer: %d\n", isMatch("a", "ab*")); // 1
     printf("Answer: %d\n", isMatch("a", ".*..a*")); // 0
     printf("Answer: %d\n", isMatch("mississippi", "mis*is*ip*.")); // 1
+    printf("Answer: %d\n", isMatch("bbacbcabbbbbcacabb", "aa*c*b*a*.*a*a.*.")); // 1
     return 0;
 }
 
@@ -35,9 +36,19 @@ int main(void) {
     // printf("Answer: %d\n", isMatch("ab", ".*c")); // 0
     // printf("Answer: %d\n", isMatch("mississippi", "mis*is*p*.")); // 0
     // printf("Answer: %d\n", isMatch("mississippi", "mis*is*p*.")); // 0
+    
+    printf("Answer: %d\n", isMatch("abcdede", "ab.*de")); // 1
     // printf("Answer: %d\n", isMatch("abbabaaaaaaacaa", "a*.*b.a.*c*b*a*c*")); // 1
-    // printf("Answer: %d\n", isMatch("abcdede", "ab.*de")); // 1
-    printf("Answer: %d\n", isMatch("baabbbaccbccacacc", "c*..b*a*a.*a..*c")); // 1
+    // printf("Answer: %d\n", isMatch("baabbbaccbccacacc", "c*..b*a*a.*a..*c")); // 1
+    // printf("Answer: %d\n", isMatch("bbacbcabbbbbcacabb", "aa*c*b*a*.*a*a.*.")); // 0
+    
+    printf("Answer: %d\n", isMatch("bbbba", "ac*.a*ac*.*.*a*a")); // 1
+    printf("Answer: %d\n", isMatch("bbbba", ".*a*a")); // 1
+    printf("Answer: %d\n", isMatch("baba", "b*.*")); // 1
+    printf("Answer: %d\n", isMatch("bcaccbbacbcbcab", "b*.c*..*.b*b*.*c*")); // 1
+    printf("Answer: %d\n", isMatch("acbbcbcbcbaaacaac", "ac*.a*ac*.*ab*b*ac")); // 0
+    printf("Answer: %d\n", isMatch("bbacbcabbbbbcacabb", "aa*c*b*a*.*a*a.*.")); // 0
+    printf("Answer: %d\n", isMatch("bcaccbbacbcbcab", "b*.c*..*.b*b*.*c*")); // 1
     // printf("Answer: %d\n", isMatch("abcd", "d*"));// 0
     // printf("Answer: %d\n", isMatch("a", ".*..a*")); // 0
     
@@ -68,74 +79,8 @@ int main(void) {
     return 0;
 }
 
-int match_main_snapshot(
-        char *s, char *p,
-        int loop_i, bool next_char_is_be_zero_or_more, char latest_match_chr,
-        int match_index, char barrier_chr
-) {
-    const int pattern_str_len = strlen(p);
 
-    next_char_is_be_zero_or_more = false;
-    loop_i--;
-
-    for (int i = loop_i; i >= 0; i--) {
-        
-        if (next_char_is_be_zero_or_more == true && p[i] != '.') {
-            latest_match_chr = p[i];
-            while(match_index >= 0 && p[i] == s[match_index]) {
-                match_index--;
-            }
-            next_char_is_be_zero_or_more = false;
-        } else if (next_char_is_be_zero_or_more == true && p[i] == '.') {
-            char barrier_chr = '\0';
-            if ((i - 1) >= 0) {
-                barrier_chr = p[i - 1];
-            }
-            while(match_index >= 0) {
-                match_index--;
-                if (barrier_chr != '\0' && barrier_chr != '.' && match_index >= 0 && s[match_index] == barrier_chr) {
-                    
-                    while(match_index >= 0 && s[match_index] == barrier_chr) {
-                        match_index--;
-                    }
-
-
-                    int st = match_index;
-                    for (int q = st + 1; q < (st + (pattern_str_len - i)) + 1; q++) {
-                        if (s[q] == p[i]) {
-                            match_index++;
-                        } else if (p[i] == '.' && s[q] == barrier_chr) {
-                            match_index++;
-                        }
-                    }
-                    break;
-                } else if (barrier_chr != '\0' && barrier_chr == '.' && match_index >= 0) {
-                    match_index--;
-                    break;
-                }
-                
-            }
-            
-            next_char_is_be_zero_or_more = false;
-        } else if (p[i] == '*') {
-            next_char_is_be_zero_or_more = true;
-        } else {
-            if (match_index < 0 && p[i] == latest_match_chr) {
-                return -1;
-            }
-
-            if (match_index >= 0 && s[match_index] == p[i] || match_index >= 0 && p[i] == '.') {
-                match_index--;
-            } else {
-                return -2;
-            }
-        }
-    }
-    return match_index;
-}
-
-
-int match_main_sanbox(int match_index, char latest_match_chr, char *s, char **p_set, int p_set_index) {
+int match_main_sanbox(int search_mode, int match_index, char latest_match_chr, char *s, char **p_set, int p_set_index) {
     char *p = p_set[p_set_index];
     printf("%d\t%s\t%s\n", match_index, s, p);
     const int pattern_str_len = strlen(p);
@@ -144,9 +89,13 @@ int match_main_sanbox(int match_index, char latest_match_chr, char *s, char **p_
         
         if (next_char_is_be_zero_or_more == true && p[i] != '.') {
             latest_match_chr = p[i];
-            while(match_index >= 0 && p[i] == s[match_index]) {
-                printf("%c\t%c\n", s[match_index], p[i]);
-                match_index--;
+            if (search_mode == 0) {
+                while(match_index >= 0 && p[i] == s[match_index]) {
+                    printf("%c\t%c\n", s[match_index], p[i]);
+                    match_index--;
+                }
+            } else if (search_mode == 1) {
+                return match_index;
             }
             next_char_is_be_zero_or_more = false;
         } else if (next_char_is_be_zero_or_more == true && p[i] == '.') {
@@ -154,24 +103,12 @@ int match_main_sanbox(int match_index, char latest_match_chr, char *s, char **p_
             if ((i - 1) >= 0) {
                 barrier_chr = p[i - 1];
             }
-            printf("barrier_chr: %c\n", barrier_chr);
+            // printf("barrier_chr: %c\n", barrier_chr);
             while(match_index >= 0) {
                 match_index--;
                 if (barrier_chr != '\0' && barrier_chr != '.' && match_index >= 0 && s[match_index] == barrier_chr) {
                     
 
-                    // printf("IIIIIII: %d\t%d\t%d\n", i, pattern_str_len, match_index);
-                    int st = match_index;
-                    for (int q = st + 1; q < (st + (pattern_str_len - i)) + 1; q++) {
-                        if (s[q] == p[i]) {
-                            // printf("%d\t", q);
-                            match_index++;
-                        } else if (p[i] == '.' && s[q] == barrier_chr) {
-                            match_index++;
-                        }
-                    }
-                    // printf("\n");
-                    // match_index = match_index + (pattern_str_len - i);
                     break;
                 } else if (barrier_chr != '\0' && barrier_chr == '.' && match_index >= 0) {
                     match_index--;
@@ -222,65 +159,78 @@ int match_main(int match_index, char *s, char **p_set, int p_set_index) {
                 barrier_chr = p[i - 1];
             }
             printf("barrier_chr: %c\n", barrier_chr);
+
+
             while(match_index >= 0) {
                 match_index--;
                 if (barrier_chr != '\0' && barrier_chr != '.' && match_index >= 0 && s[match_index] == barrier_chr) {
-                    
-
                     for (int o = 0; o <= match_index; o++) {
+                        
+                        
                         if (s[o] == barrier_chr) {
-                            barrier_possible[barrier_possible_index] = o;
-                            barrier_possible_index++;
+                            printf("o-k\n\n");
+                            for (int i = p_set_index, k = o; i >= 0; i--) {
+                                int rk = match_main_sanbox(0, k, latest_match_chr, s, p_set, i);
+                                int lk = match_main_sanbox(1, k, latest_match_chr, s, p_set, i);
+                                printf("rk-lk\t%d\t%d\n", rk, lk);
+                                if (rk == -1 || lk == -1) {
+                                    if (i == 0) {
+                                        printf("rk-lk is -1, but i is 0\n");
+                                        return -2;
+                                    }
+                                    printf("p_set_index: %d\t%d\n", i, p_set_index);
+                                    return -1;
+                                } else if (rk == -2 && lk == -2) {
+                                    return -2;
+                                }
+                                k = rk > lk ? rk : lk;
+                                printf("rk-lk\t%d\t%d\n", rk, lk);
+                                printf("=================>>>> %d\n\n", k);
+                            }
+                            printf("\n");
                         }
                     }
 
                     printf("==========================\n\n\n\n\n");
-
-                    for (int l = 0; l < barrier_possible_index; l++) {
-                        // int c = match_main_snapshot(s, p, i, next_char_is_be_zero_or_more, latest_match_chr, barrier_possible[l], barrier_chr);
-                        // int k = match_main(c, s, p_set, p_set_index);
-                        int k = match_main_sanbox(barrier_possible[l], latest_match_chr, s, p_set, p_set_index);
-                        for (int p_s_index = p_set_index - 1; k >= 0;) {
-                            
-                            k = match_main_sanbox(k, latest_match_chr, s, p_set, p_s_index);
-                            if (p_s_index > 0) {
-                                p_s_index--;
-                            }
-                            if (k < 0) {
-                                break;
-                            }
-                        }
-                        printf("=================>>>> %d\n\n", k);
-                        // while(k >= 0) {
-                        //     printf("\n\n\n\naaaaaaaaaaaaaaaaa[%d]:\t%d\n", l, k);
-                        //     k = match_main(barrier_possible[l], s, p_set, p_set_index - offset);
-                        // }
-                        // return c;
-                        // printf("\n\nc is %d\n", c);
-                    }
-
-                    // while(match_index >= 0 && s[match_index] == barrier_chr) {
-                    //     match_index--;
-                    // }
-
-                    // printf("IIIIIII: %d\t%d\t%d\n", i, pattern_str_len, match_index);
-                    // int st = match_index;
-                    // for (int q = st + 1; q < (st + (pattern_str_len - i)) + 1; q++) {
-                    //     if (s[q] == p[i]) {
-                    //         // printf("%d\t", q);
-                    //         printf("\t\t\tfgd%c\t%c\n", s[q], p[i]); //也許可以移除
-                    //         match_index++;
-                    //     } else if (p[i] == '.' && s[q] == barrier_chr) {
-                    //         printf("%c\t", s[q]);
-                    //         match_index++;
-                    //     }
-                    // }
-                    // printf("\n");
-                    // match_index = match_index + (pattern_str_len - i);
                     break;
                 } else if (barrier_chr != '\0' && barrier_chr == '.' && match_index >= 0) {
                     match_index--;
                     break;
+                } else if (barrier_chr == '\0') {
+                    int find_match = 0;
+
+                    printf("p_set_index:\t%d\t%s\t%d\n", i, p, strlen(p));
+                    
+                    if (strlen(p) == 2 && p[0] == '.' && p[1] == '*' && p_set_index == 0 ) {
+                        find_match = 1;
+                        return -1;
+                    } else if (strlen(p) == 2 && p[0] == '.' && p[1] == '*' && p_set_index == 1) {
+                        char *np = p_set[p_set_index - 1];
+                        if (strlen(np) == 2) { // 如果pattern只有兩位長度
+                            barrier_chr = np[0];
+                            continue;
+                        } else {
+                            printf("---*********************%s\n", np);
+                        }
+                    }
+
+                    
+
+
+                    for (int sm = p_set_index - 1; sm >= 0; sm--) {
+                        printf("sm_s:\t%s\t%s\n", p, p_set[sm]);
+                        if (strcmp(p, p_set[sm]) == 0) {
+                            find_match = 1;
+                            break;
+                        }
+                    }
+                    
+                    printf("barrier_chr_match_index:\t%d - %c - %c\n", match_index, barrier_chr, latest_match_chr);
+                    
+                    
+                    if (find_match == 0) {
+                        return -2;
+                    }
                 }
                 
             }
