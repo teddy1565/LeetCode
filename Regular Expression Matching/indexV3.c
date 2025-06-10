@@ -92,6 +92,8 @@ bool isMatch(char* s, char* p) {
         
     }
 
+    free(pattern_str_shared);
+
     return true;
 }
 
