@@ -2,6 +2,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include <stdbool.h>
+#include <assert.h>
 
 bool isMatch(char* s, char* p);
 int match_main(int match_index, char *s, char **p_set, int p_set_index);
@@ -17,20 +18,21 @@ int main(void) {
     // printf("Answer: %d\n", isMatch("ab", ".*c")); // 0
     // printf("Answer: %d\n", isMatch("mississippi", "mis*is*p*.")); // 0
     // printf("Answer: %d\n", isMatch("mississippi", "mis*is*p*.")); // 0
+    assert(isMatch("abcdede", "ab.*de") == true);
+    assert(isMatch("bbbba", "ac*.a*ac*.*.*a*a") == true); // 1
+    assert(isMatch("bbbba", ".*a*a") == true); // 1
+    assert(isMatch("baba", "b*.*") == true); // 1
+    assert(isMatch("bcaccbbacbcbcab", "b*.c*..*.b*b*.*c*") == true); // 1
+    assert(isMatch("acbbcbcbcbaaacaac", "ac*.a*ac*.*ab*b*ac") == false); // 0
+    assert(isMatch("bbacbcabbbbbcacabb", "aa*c*b*a*.*a*a.*.") == false); // 0
+    assert(isMatch("bcaccbbacbcbcab", "b*.c*..*.b*b*.*c*") == true); // 1
     
-    printf("Answer: %d\n", isMatch("abcdede", "ab.*de")); // 1
+    assert(isMatch("abb", "a.*b") == true); // 1
     // printf("Answer: %d\n", isMatch("abbabaaaaaaacaa", "a*.*b.a.*c*b*a*c*")); // 1
     // printf("Answer: %d\n", isMatch("baabbbaccbccacacc", "c*..b*a*a.*a..*c")); // 1
     // printf("Answer: %d\n", isMatch("bbacbcabbbbbcacabb", "aa*c*b*a*.*a*a.*.")); // 0
     
-    printf("Answer: %d\n", isMatch("bbbba", "ac*.a*ac*.*.*a*a")); // 1
-    printf("Answer: %d\n", isMatch("bbbba", ".*a*a")); // 1
-    printf("Answer: %d\n", isMatch("baba", "b*.*")); // 1
-    printf("Answer: %d\n", isMatch("bcaccbbacbcbcab", "b*.c*..*.b*b*.*c*")); // 1
-    printf("Answer: %d\n", isMatch("acbbcbcbcbaaacaac", "ac*.a*ac*.*ab*b*ac")); // 0
-    printf("Answer: %d\n", isMatch("bbacbcabbbbbcacabb", "aa*c*b*a*.*a*a.*.")); // 0
-    printf("Answer: %d\n", isMatch("bcaccbbacbcbcab", "b*.c*..*.b*b*.*c*")); // 1
-    printf("Answer: %d\n", isMatch("abcdede", "ab.*de")); // 1
+    
     // printf("Answer: %d\n", isMatch("abcd", "d*"));// 0
     // printf("Answer: %d\n", isMatch("a", ".*..a*")); // 0
     
@@ -60,7 +62,6 @@ int main(void) {
     // printf("Answer: %d\n", isMatch("aaag", ".*g")); // 1
     return 0;
 }
-
 
 int match_main_sanbox(int search_mode, int match_index, char latest_match_chr, char *s, char **p_set, int p_set_index) {
     char *p = p_set[p_set_index];
@@ -109,6 +110,8 @@ int match_main_sanbox(int search_mode, int match_index, char latest_match_chr, c
 
             if (match_index >= 0 && s[match_index] == p[i] || match_index >= 0 && p[i] == '.') {
                 match_index--;
+            } else if (match_index == -1 && i == 1) {
+                return match_index;
             } else {
                 return -2;
             }
@@ -156,11 +159,11 @@ int match_main(int match_index, char *s, char **p_set, int p_set_index) {
                                 int lk = match_main_sanbox(1, k, latest_match_chr, s, p_set, i);
                                 printf("rk-lk\t%d\t%d\n", rk, lk);
                                 if (rk == -1 || lk == -1) {
-                                    if (i == 0) {
+                                    printf("p_set_index: %d\t%d\t%d\n", i, p_set_index, match_index);
+                                    if (i == 0 && match_index != 1) {
                                         printf("rk-lk is -1, but i is 0\n");
                                         return -2;
                                     }
-                                    printf("p_set_index: %d\t%d\n", i, p_set_index);
                                     return -1;
                                 } else if (rk == -2 && lk == -2) {
                                     return -2;
