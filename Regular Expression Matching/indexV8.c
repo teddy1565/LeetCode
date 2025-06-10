@@ -6,25 +6,6 @@
 bool isMatch(char* s, char* p);
 int match_main(int match_index, char *s, char **p_set, int p_set_index);
 
-int old_main(void) {
-    printf("Answer: %d\n", isMatch("ab", ".*"));   //1
-
-    printf("Answer: %d\n", isMatch("aab", "c*a*b"));   //1
-    
-    printf("Answer: %d\n", isMatch("acbdb", "aa*cbdb"));   //1
-    printf("Answer: %d\n", isMatch("mississippi", "mis*is*p*.")); // 0
-    printf("Answer: %d\n", isMatch("mississippi", "mis*is*p*.")); // 0
-    printf("Answer: %d\n", isMatch("abcd", "d*"));// 0
-    printf("Answer: %d\n", isMatch("aaa", "a*a")); // 1
-    printf("Answer: %d\n", isMatch("ab", ".*c")); // 0
-    printf("Answer: %d\n", isMatch("aaa", "ab*a*c*a")); // 1
-    printf("Answer: %d\n", isMatch("a", "ab*")); // 1
-    printf("Answer: %d\n", isMatch("a", ".*..a*")); // 0
-    printf("Answer: %d\n", isMatch("mississippi", "mis*is*ip*.")); // 1
-    printf("Answer: %d\n", isMatch("bbacbcabbbbbcacabb", "aa*c*b*a*.*a*a.*.")); // 1
-    return 0;
-}
-
 int main(void) {
 
 
@@ -49,6 +30,7 @@ int main(void) {
     printf("Answer: %d\n", isMatch("acbbcbcbcbaaacaac", "ac*.a*ac*.*ab*b*ac")); // 0
     printf("Answer: %d\n", isMatch("bbacbcabbbbbcacabb", "aa*c*b*a*.*a*a.*.")); // 0
     printf("Answer: %d\n", isMatch("bcaccbbacbcbcab", "b*.c*..*.b*b*.*c*")); // 1
+    printf("Answer: %d\n", isMatch("abcdede", "ab.*de")); // 1
     // printf("Answer: %d\n", isMatch("abcd", "d*"));// 0
     // printf("Answer: %d\n", isMatch("a", ".*..a*")); // 0
     
