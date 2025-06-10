@@ -35,6 +35,9 @@ int main(void) {
     // printf("Answer: %d\n", isMatch("ab", ".*c")); // 0
     // printf("Answer: %d\n", isMatch("mississippi", "mis*is*p*.")); // 0
     // printf("Answer: %d\n", isMatch("mississippi", "mis*is*p*.")); // 0
+    printf("Answer: %d\n", isMatch("abbabaaaaaaacaa", "a*.*b.a.*c*b*a*c*")); // 1
+    // printf("Answer: %d\n", isMatch("abcdede", "ab.*de")); // 1
+    printf("Answer: %d\n", isMatch("baabbbaccbccacacc", "c*..b*a*a.*a..*c")); // 1
     // printf("Answer: %d\n", isMatch("abcd", "d*"));// 0
     // printf("Answer: %d\n", isMatch("a", ".*..a*")); // 0
     
@@ -47,7 +50,8 @@ int main(void) {
     // printf("Answer: => %d\n", isMatch("aab", "b.*")); // 0
     // printf("Answer: => %d\n", isMatch("b", "b*")); // 1
     // printf("Answer: => %d\n", isMatch("a", ".*a*")); // 1
-    printf("Answer: => %d\n", isMatch("bab", "..*")); // 1
+    // printf("Answer: => %d\n", isMatch("bab", "..*")); // 1
+    // printf("Answer: => %d\n", isMatch("abb", "bb*c")); // 0
 
 
     // printf("Answer: => %d\n", isMatch("aaag", "aaa*g")); // 1
@@ -83,24 +87,49 @@ int match_main(int match_index, char *s, char *p) {
             if ((i - 1) >= 0) {
                 barrier_chr = p[i - 1];
             }
+            printf("barrier_chr: %c\n", barrier_chr);
             while(match_index >= 0) {
                 match_index--;
-                if (barrier_chr != '\0' && match_index >= 0 && s[match_index] == barrier_chr) {
-                    
+                if (barrier_chr != '\0' && barrier_chr != '.' && match_index >= 0 && s[match_index] == barrier_chr) {
+                    while(match_index >= 0 && s[match_index] == barrier_chr) {
+                        match_index--;
+                    }
+                    printf("IIIIIII: %d\t%d\t%d\n", i, pattern_str_len, match_index);
+                    int st = match_index;
+                    for (int q = st + 1; q < (st + (pattern_str_len - i)) + 1; q++) {
+                        if (s[q] == p[i]) {
+                            // printf("%d\t", q);
+                            printf("\t\t\tfgd%c\t%c\n", s[q], p[i]); //也許可以移除
+                            match_index++;
+                        } else if (p[i] == '.' && s[q] == barrier_chr) {
+                            printf("%c\t", s[q]);
+                            match_index++;
+                        }
+                    }
+                    printf("\n");
+                    // match_index = match_index + (pattern_str_len - i);
+                    break;
+                } else if (barrier_chr != '\0' && barrier_chr == '.' && match_index >= 0) {
+                    match_index--;
                     break;
                 }
+                
             }
+            
             next_char_is_be_zero_or_more = false;
         } else if (p[i] == '*') {
             next_char_is_be_zero_or_more = true;
         } else {
+
+            printf("matchIndex:%d\n", match_index);
             if (match_index >= 0 && i >= 0) {
                 printf("[%c\t%c\n", s[match_index], p[i]);
             }
             if (match_index < 0 && p[i] == latest_match_chr) {
                 return -1;
             }
-            if (match_index >= 0 && s[match_index] == p[i] || p[i] == '.') {
+
+            if (match_index >= 0 && s[match_index] == p[i] || match_index >= 0 && p[i] == '.') {
                 printf("i%d\n", i);
                 match_index--;
             } else {
@@ -108,12 +137,12 @@ int match_main(int match_index, char *s, char *p) {
             }
         }
     }
-
+    printf("matchIndex:%d\n", match_index);
     return match_index;
 }
 
 bool isMatch(char *s, char* p) {
-    printf("%s\t%s\n------\n", s, p);
+    printf("\n\n==========\n\n%s\t%s\n------\n", s, p);
     const int source_str_length = strlen(s);
     const int pattern_str_length = strlen(p);
 
@@ -186,7 +215,9 @@ bool isMatch(char *s, char* p) {
         printf("%s\n", pattern_split[i]);
         int p_index = match_main(match_index, s, pattern_split[i]);
         printf("%d\n--\n", p_index);
-        if (p_index != -1) {
+        if (p_index < -1) {
+            break;
+        } else if (p_index != -1) {
             match_index = p_index;
         } else if (p_index == -1) {
             result = true;
