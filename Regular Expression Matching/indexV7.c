@@ -38,7 +38,16 @@ int main(void) {
     // printf("Answer: %d\n", isMatch("abcd", "d*"));// 0
     // printf("Answer: %d\n", isMatch("a", ".*..a*")); // 0
     
-    printf("Answer: => %d\n", isMatch("a", "ab*a")); // 0
+    // printf("Answer: => %d\n", isMatch("a", "ab*a")); // 0
+    // printf("Answer: => %d\n", isMatch("a", "a*a")); // 1
+    // printf("Answer: => %d\n", isMatch("a", ".*.")); // 1
+    // printf("Answer: => %d\n", isMatch("b", "b.*c")); // 0
+
+
+    // printf("Answer: => %d\n", isMatch("aab", "b.*")); // 0
+    // printf("Answer: => %d\n", isMatch("b", "b*")); // 1
+    // printf("Answer: => %d\n", isMatch("a", ".*a*")); // 1
+    printf("Answer: => %d\n", isMatch("bab", "..*")); // 1
 
 
     // printf("Answer: => %d\n", isMatch("aaag", "aaa*g")); // 1
@@ -76,7 +85,7 @@ int match_main(int match_index, char *s, char *p) {
             }
             while(match_index >= 0) {
                 match_index--;
-                if (barrier_chr != '\0' && s[match_index] == barrier_chr) {
+                if (barrier_chr != '\0' && match_index >= 0 && s[match_index] == barrier_chr) {
                     
                     break;
                 }
@@ -110,6 +119,42 @@ bool isMatch(char *s, char* p) {
 
     if (pattern_str_length == 2 && p[0] == '.' && p[1] == '*') {
         return true;
+    } else if (source_str_length == 1 && pattern_str_length == 1) {
+        if (s[0] == p[0] || p[0] == '.') {
+            return true;
+        }
+        return false;
+    } else if (source_str_length == 1 && pattern_str_length < 5) {
+        int hit_count = 0;
+        int star_count = 0;
+        int not_hit_count = 0;
+        for (int i = pattern_str_length-1; i >= 0; i--) {
+            if (p[i] == s[0]) {
+                hit_count++;
+            } else if (p[i] == '*') {
+                star_count++;
+                if (p[i - 1] == s[0] || p[i - 1] == '.') {
+                    hit_count--;
+                } else {
+                    not_hit_count--;
+                }
+            } else if (p[i] == '.') {
+                hit_count++;
+            } else if (p[i] != s[0]) {
+                not_hit_count++;
+            }
+        }
+        printf("%d\t%d\t%d\n", hit_count, star_count, not_hit_count);
+        if (not_hit_count) {
+            return false;
+        } else if (hit_count == star_count) {
+            return true;
+        } else if (hit_count == 0 && star_count == 1) {
+            return true;
+        } else if (hit_count == 0 && star_count == 2) {
+            return true;
+        }
+        return false;
     }
 
     int pattern_split_size = 1;
