@@ -71,7 +71,7 @@ bool isMatch(char *s, char *p) {
     printf("\n");
     printf("pattern trunc result:\n");
     for (int i = 1; i < patterns_size; i++) {
-        printf("%d.|\t%s\t%s\t%d\n", i, patterns[i - 1], patterns[i], strcmp(patterns[i - 1], patterns[i]));
+        printf("%d.|\t%s\t%s\t%d\t|\n", i, patterns[i - 1], patterns[i], strcmp(patterns[i - 1], patterns[i]));
         if (patterns[i - 1][0] == '\30') {
             continue;
         } else if (strcmp(patterns[i - 1], patterns[i]) == 0 && patterns[i - 1][1] == '*') {
@@ -79,6 +79,18 @@ bool isMatch(char *s, char *p) {
 
             patterns[i - 1][0] = '\30';
             patterns[i - 1][1] = '\0';
+        } else if (
+            patterns[i - 1][0] != '.' && patterns[i - 1][1] == '*' &&
+            patterns[i][1] != '*' &&
+            patterns[i - 1][0] == patterns[i][0]
+        ) {
+            printf("\t\t\t\t--(swap). %s\t%s\n", patterns[i - 1], patterns[i]);
+
+            patterns[i - 1][1] = '\0';
+
+            patterns[i][1] = '*';
+            patterns[i][2] = '\0';
+
         }
     }
 
