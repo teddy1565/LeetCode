@@ -27,7 +27,9 @@ int main(void) {
     // isMatch("abcde", "b*.c*..*.b*b*.*c*");
     assert(isMatch("aab", "c*a*b") == true);
     assert(isMatch("a", "ab*a") == false);
-    bool answer = isMatch("a", "ab*");
+    assert(isMatch("a", "ab*") == true);
+
+    bool answer = isMatch("aaa", "ab*a*c*a");
     printf("answer: %d\n", answer);
 
     // answer = isMatch("a", "ab*a");
