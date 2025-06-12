@@ -25,8 +25,11 @@ int main(void) {
     // assert(isMatch("acbbcbcbcbaaacaac", "ac*.a*ac*.*ab*b*ac") == false); // 0
     // assert(isMatch("bbacbcabbbbbcacabb", "aa*c*b*a*.*a*a.*.") == false); // 0
     // isMatch("abcde", "b*.c*..*.b*b*.*c*");
-    bool answer = isMatch("aaa", "ab*a*c*a");
+    bool answer = isMatch("a", "ab*a");
     printf("answer: %d\n", answer);
+
+    // answer = isMatch("a", "ab*a");
+    // printf("answer: %d\n", answer);
     return 0;
 }
 
@@ -180,8 +183,10 @@ normal_task:
                     if (match_index == source_str_length && i == patterns_size) {
                         result = true;
                         goto response_answer;
+                    } else if (match_index == source_str_length && i != patterns_size) {
+                        goto response_answer;
                     }
-                } else if (s[match_index] != pattern[0] && s[match_index] != '\0') {
+                } else if (s[match_index] != pattern[0]) {
 
                     goto response_answer;
                 }
@@ -379,6 +384,8 @@ normal_task:
                     match_index++;
                     if (match_index == source_str_length && i == patterns_size) {
                         result = true;
+                        goto response_answer;
+                    } else if (match_index == source_str_length && i != patterns_size) {
                         goto response_answer;
                     }
                 } else if (s[match_index] != pattern[0] && s[match_index] != '\0') {
