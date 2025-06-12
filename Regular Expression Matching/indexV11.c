@@ -122,7 +122,7 @@ after_special_case_checked:
 
                 for (int m = i + 1; m < patterns_size; m++) {
 
-                    if (patterns[m][0] != pattern[0] && patterns[m][1] == '*') {
+                    if (patterns[m][0] == '.' && patterns[m][1] == '*') {
                         break;
                     }
                     strcat(snapshot_pattern, patterns[m]);
@@ -133,7 +133,7 @@ after_special_case_checked:
                     char temp = *(source_str_cpy)++;
                 }
                 for (int m = match_index; m < source_str_length; m++) {
-                    if (s[m] == '\0') {
+                    if (s[m] != pattern[0]) {
                         break;
                     }
                     bool match_result = isMatch_no_display_ver(source_str_cpy, snapshot_pattern);
@@ -354,7 +354,7 @@ after_special_case_checked:
 
                 for (int m = i + 1; m < patterns_size; m++) {
 
-                    if (patterns[m][0] != pattern[0] && patterns[m][1] == '*') {
+                    if (patterns[m][0] == '.' && patterns[m][1] == '*') {
                         break;
                     }
                     strcat(snapshot_pattern, patterns[m]);
@@ -370,7 +370,7 @@ after_special_case_checked:
                 }
                 printf("\t\t\t|- (task %c*) source_str_cpy: %s\n", pattern[0], source_str_cpy);
                 for (int m = match_index; m < source_str_length; m++) {
-                    if (s[m] == '\0') {
+                    if (s[m] != pattern[0]) {
                         break;
                     }
                     bool match_result = isMatch_no_display_ver(source_str_cpy, snapshot_pattern);
