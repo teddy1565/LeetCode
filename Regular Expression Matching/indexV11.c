@@ -212,7 +212,7 @@ matched_all_chr_with_star:
             }
         } else {
             if (pattern[0] != '.') {
-                if (s[match_index] == pattern[0]) {
+                if (match_index < source_str_length && s[match_index] == pattern[0]) {
                     match_index++;
                 } else if (s[match_index] != pattern[0]) {
                     goto response_answer;
@@ -503,7 +503,7 @@ matched_all_chr_with_star:
             }
         } else {
             if (pattern[0] != '.') {
-                if (s[match_index] == pattern[0]) {
+                if (match_index < source_str_length && s[match_index] == pattern[0]) {
                     match_index++;
                     printf("\t\t\t|==> (task info)\tMatchIndex:%d\tpattern_char:[%c]\tsource_char:[%c]\tpatternsIndex: %d\tpatterns_size: %d\n", match_index, pattern[0], s[match_index], i, patterns_size);
                 } else if (s[match_index] != pattern[0]) {
