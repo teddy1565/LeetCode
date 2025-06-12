@@ -25,7 +25,9 @@ int main(void) {
     // assert(isMatch("acbbcbcbcbaaacaac", "ac*.a*ac*.*ab*b*ac") == false); // 0
     // assert(isMatch("bbacbcabbbbbcacabb", "aa*c*b*a*.*a*a.*.") == false); // 0
     // isMatch("abcde", "b*.c*..*.b*b*.*c*");
-    bool answer = isMatch("aab", "c*a*b");
+    assert(isMatch("aab", "c*a*b") == true);
+    assert(isMatch("a", "ab*a") == false);
+    bool answer = isMatch("a", "ab*");
     printf("answer: %d\n", answer);
 
     // answer = isMatch("a", "ab*a");
@@ -180,16 +182,16 @@ normal_task:
             if (pattern[0] != '.') {
                 if (s[match_index] == pattern[0]) {
                     match_index++;
-                    if (match_index == source_str_length && i == patterns_size) {
-                        result = true;
-                        goto response_answer;
-                    } else if (match_index == source_str_length && i == (patterns_size - 1)) {
-                        result = true;
-                        goto response_answer;
-                    } else if (match_index == source_str_length && i != patterns_size) {
+                    // if (match_index == source_str_length && i == patterns_size) {
+                    //     result = true;
+                    //     goto response_answer;
+                    // } else if (match_index == source_str_length && i == (patterns_size - 1)) {
+                    //     result = true;
+                    //     goto response_answer;
+                    // } else if (match_index == source_str_length && i != patterns_size) {
 
-                        goto response_answer;
-                    }
+                    //     goto response_answer;
+                    // }
                 } else if (s[match_index] != pattern[0]) {
                     goto response_answer;
                 }
@@ -385,17 +387,18 @@ normal_task:
             if (pattern[0] != '.') {
                 if (s[match_index] == pattern[0]) {
                     match_index++;
-                    if (match_index == source_str_length && i == patterns_size) {
-                        result = true;
-                        goto response_answer;
-                    } else if (match_index == source_str_length && i == (patterns_size - 1)) {
-                        result = true;
-                        goto response_answer;
-                    } else if (match_index == source_str_length && i != patterns_size) {
-                        printf("\t\t\t|==> (no match)\tMatchIndex:%d\tpattern_char:[%c]\tsource_char:[%c]\tpatternsIndex: %d\tpatterns_size: %d\n", match_index, pattern[0], s[match_index], i, patterns_size);
-                        goto response_answer;
-                    }
-                } else if (s[match_index] != pattern[0] && s[match_index] != '\0') {
+                    printf("\t\t\t|==> (task info)\tMatchIndex:%d\tpattern_char:[%c]\tsource_char:[%c]\tpatternsIndex: %d\tpatterns_size: %d\n", match_index, pattern[0], s[match_index], i, patterns_size);
+                    // if (match_index == source_str_length && i == patterns_size) {
+                    //     result = true;
+                    //     goto response_answer;
+                    // } else if (match_index == source_str_length && i == (patterns_size - 1)) {
+                    //     result = true;
+                    //     goto response_answer;
+                    // } else if (match_index == source_str_length && i != patterns_size) {
+                    //     printf("\t\t\t|==> (no match)\tMatchIndex:%d\tpattern_char:[%c]\tsource_char:[%c]\tpatternsIndex: %d\tpatterns_size: %d\n", match_index, pattern[0], s[match_index], i, patterns_size);
+                    //     goto response_answer;
+                    // }
+                } else if (s[match_index] != pattern[0]) {
                     printf("\t\t\t|==> (no match)\tMatchIndex:%d\tpattern_char:[%c]\tsource_char:[%c]\tpatternsIndex: %d\tpatterns_size: %d\n", match_index, pattern[0], s[match_index], i, patterns_size);
                     goto response_answer;
                 }
