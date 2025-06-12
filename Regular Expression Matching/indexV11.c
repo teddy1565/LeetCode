@@ -191,7 +191,20 @@ matched_signle_chr_with_star:
                 }
 
 
-                match_index = source_str_length;
+                if ((i + 1) < patterns_size) {
+                    char barrier_chr_ = '\0';
+                    for (int k = i + 1; k < patterns_size; k++) {
+                        if (patterns[k][1] == '\0' && patterns[k][0] != '\30') {
+                            barrier_chr_ = patterns[k][0];
+                            break;
+                        }
+                    }
+                    while(s[match_index] != barrier_chr_) {
+                        match_index++;
+                    }
+                } else {
+                    match_index = source_str_length;
+                }
 
 matched_all_chr_with_star:
                 free(snapshot_pattern);
@@ -231,13 +244,24 @@ only_response_result:
 
 bool isMatch(char *s, char *p) {
 
-    printf("==============================================\n\n");
-    printf("\t%s\n\n\t%s\n\n", s, p);
-    printf("-----------------------\n\n");
+
     bool result = false;
 
     const int source_str_length = strlen(s);
     const int pattern_str_length = strlen(p);
+
+    printf("==============================================\n\n");
+    printf("  ");
+    for (int i = 0; i < source_str_length; i++) {
+        printf("%d\t", i);
+    }
+    printf("\n\n  ");
+    for (int i = 0; i < source_str_length; i++) {
+        printf("%c\t", s[i]);
+    }
+    printf("\n\n");
+    printf("\t%s\n\n\t%s\n\n", s, p);
+    printf("-----------------------\n\n");
 
     int patterns_size = 0;
 
@@ -323,7 +347,7 @@ after_special_case_checked:
             patterns[i][1] != '*' &&
             (patterns[i - 1][0] == patterns[i][0])
         ) {
-            printf("\t\t\t\t--(swap). %s\t%s\n", patterns[i - 1], patterns[i]);
+            printf("\t\t\t\t|-(swap):\t%s\t%s\n", patterns[i - 1], patterns[i]);
 
             char temp_swap = patterns[i - 1][0];
             patterns[i - 1][0] = patterns[i][0];
@@ -434,7 +458,11 @@ matched_signle_chr_with_star:
                         break;
                     }
                     bool match_result = isMatch_no_display_ver(source_str_cpy, snapshot_pattern);
-
+                    if (match_result == 0) {
+                        printf("\t\t\t\t|- (task .*) match_simulate: [ False ]\t%s\n", source_str_cpy);
+                    } else {
+                        printf("\t\t\t\t|- (task .*) match_simulate: [ True ]\t%s\n", source_str_cpy);
+                    }
                     if (match_result == true) {
                         printf("\t\t\t|- (task %c*) MatchIndex %d => %d\n", pattern[0], match_index, m);
                         match_index = m;
@@ -443,8 +471,30 @@ matched_signle_chr_with_star:
 
                     char temp = *(source_str_cpy)++;
                 }
-                printf("\t\t\t|- (task .*) match_index: [ %d => %d ]\n", match_index, source_str_length);
-                match_index = source_str_length;
+
+                printf("\t\t\t| === INFO ===> (task .*) > i:%d, patterns_size:%d, match_index: %d\n\n", i, patterns_size, match_index);
+                printf("\t\t\t| === INFO ===> (task .*) > pattern:%s\n\n", pattern);
+
+
+
+                if ((i + 1) < patterns_size) {
+                    char barrier_chr_ = '\0';
+                    for (int k = i + 1; k < patterns_size; k++) {
+                        if (patterns[k][1] == '\0' && patterns[k][0] != '\30') {
+                            barrier_chr_ = patterns[k][0];
+                            break;
+                        }
+                    }
+
+                    printf("\t\t\t| === INFO ===> (task .*) > next_pattern: %s\tbarrier_chr: %c\n\n", patterns[i + 1], barrier_chr_);
+                    while(s[match_index] != barrier_chr_) {
+                        printf("\t\t\t|- (task .*) match_index: [ %d => %d ]\n", match_index, match_index + 1);
+                        match_index++;
+                    }
+                } else {
+                    printf("\t\t\t|- (task .*) match_index: [ %d => %d ]\n\n", match_index, source_str_length);
+                    match_index = source_str_length;
+                }
 
 matched_all_chr_with_star:
                 printf("\n");
