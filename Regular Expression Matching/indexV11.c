@@ -29,7 +29,8 @@ int main(void) {
     assert(isMatch("a", "ab*a") == false);
     assert(isMatch("a", "ab*") == true);
     assert(isMatch("aaa", "ab*a*c*a") == true);
-    bool answer = isMatch("aa", "a*");
+    assert(isMatch("aa", "a*") == true);
+    bool answer = isMatch("mississippi", "mis*is*p*.");
     printf("answer: %d\n", answer);
 
     // answer = isMatch("a", "ab*a");
@@ -44,19 +45,6 @@ bool isMatch_no_display_ver(char *s, char *p) {
     const int source_str_length = strlen(s);
     const int pattern_str_length = strlen(p);
 
-    if (pattern_str_length == 2 && p[0] == '.' && p[1] == '*') {
-        result = true;
-        goto only_response_result;
-    } else if (pattern_str_length == 2 && p[1] == '*') {
-        for (int i = 0; i < source_str_length; i++) {
-            if (s[i] != p[0]) {
-                goto normal_task;
-            }
-        }
-        result = true;
-        goto only_response_result;
-    }
-
     int patterns_size = 0;
 
     char **patterns = (char **)malloc(sizeof(char *) * 20);
@@ -65,10 +53,9 @@ bool isMatch_no_display_ver(char *s, char *p) {
 
     for (int i = 0; i < pattern_str_length; i++) {
         if (p[i] == '*') {
-            goto normal_task;
+            goto after_find_pattern_checked;
         }
     }
-
 
     if (source_str_length != pattern_str_length) {
         goto only_response_result;
@@ -82,7 +69,25 @@ bool isMatch_no_display_ver(char *s, char *p) {
         goto only_response_result;
     }
 
-normal_task:
+after_find_pattern_checked:
+
+    if (pattern_str_length == 2 && p[0] == '.' && p[1] == '*') {
+        result = true;
+        goto only_response_result;
+    } else if (pattern_str_length == 2 && p[1] == '*') {
+        for (int i = 0; i < source_str_length; i++) {
+            if (s[i] != p[0]) {
+                goto after_special_case_checked;
+            }
+        }
+        result = true;
+        goto only_response_result;
+    }
+
+
+
+
+after_special_case_checked:
 
     for (int i = 0; i < 20; i++) {
         patterns[i] = (char *)malloc(sizeof(char) * 3);
@@ -268,31 +273,18 @@ bool isMatch(char *s, char *p) {
     const int source_str_length = strlen(s);
     const int pattern_str_length = strlen(p);
 
-    if (pattern_str_length == 2 && p[0] == '.' && p[1] == '*') {
-        result = true;
-        goto only_response_result;
-    } else if (pattern_str_length == 2 && p[1] == '*') {
-        for (int i = 0; i < source_str_length; i++) {
-            if (s[i] != p[0]) {
-                goto normal_task;
-            }
-        }
-        result = true;
-        goto only_response_result;
-    }
-
     int patterns_size = 0;
 
     char **patterns = (char **)malloc(sizeof(char *) * 20);
     memset(patterns, 0, 20);
 
 
+
     for (int i = 0; i < pattern_str_length; i++) {
         if (p[i] == '*') {
-            goto normal_task;
+            goto after_find_pattern_checked;
         }
     }
-
 
     if (source_str_length != pattern_str_length) {
         goto only_response_result;
@@ -306,7 +298,24 @@ bool isMatch(char *s, char *p) {
         goto only_response_result;
     }
 
-normal_task:
+after_find_pattern_checked:
+
+    if (pattern_str_length == 2 && p[0] == '.' && p[1] == '*') {
+        result = true;
+        goto only_response_result;
+    } else if (pattern_str_length == 2 && p[1] == '*') {
+        for (int i = 0; i < source_str_length; i++) {
+            if (s[i] != p[0]) {
+                goto after_special_case_checked;
+            }
+        }
+        result = true;
+        goto only_response_result;
+    }
+
+
+
+after_special_case_checked:
 
     for (int i = 0; i < 20; i++) {
         patterns[i] = (char *)malloc(sizeof(char) * 3);
