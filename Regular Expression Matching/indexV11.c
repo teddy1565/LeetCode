@@ -473,8 +473,8 @@ matched_signle_chr_with_star:
                     char temp = *(source_str_cpy)++;
                 }
 
-                printf("\t\t\t| === INFO ===> (task .*) > i:%d, patterns_size:%d, match_index: %d\n\n", i, patterns_size, match_index);
-                printf("\t\t\t| === INFO ===> (task .*) > pattern:%s\n\n", pattern);
+                printf("\t\t\t| === INFO ===> (task .*) > i: %d, patterns_size:%d, match_index: %d\n\n", i, patterns_size, match_index);
+                printf("\t\t\t| === INFO ===> (task .*) > pattern: [%s]\n\n", pattern);
 
 
 
@@ -489,11 +489,11 @@ matched_signle_chr_with_star:
 
                     printf("\t\t\t| === INFO ===> (task .*) > next_pattern: %s\tbarrier_chr: %c\n\n", patterns[i + 1], barrier_chr_);
                     while(match_index < source_str_length && s[match_index] != barrier_chr_) {
-                        printf("\t\t\t|- (task .*) match_index: [ %d => %d ]\n", match_index, match_index + 1);
+                        printf("\t\t\t|- (task .*) [while] match_index: [ %d => %d ]\n", match_index, match_index + 1);
                         match_index++;
                     }
                 } else {
-                    printf("\t\t\t|- (task .*) match_index: [ %d => %d ]\n\n", match_index, source_str_length);
+                    printf("\t\t\t|- (task .*) [not while] match_index: [ %d => %d ]\n\n", match_index, source_str_length);
                     match_index = source_str_length;
                 }
 
