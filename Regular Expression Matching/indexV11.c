@@ -25,7 +25,7 @@ int main(void) {
     // assert(isMatch("acbbcbcbcbaaacaac", "ac*.a*ac*.*ab*b*ac") == false); // 0
     // assert(isMatch("bbacbcabbbbbcacabb", "aa*c*b*a*.*a*a.*.") == false); // 0
     // isMatch("abcde", "b*.c*..*.b*b*.*c*");
-    bool answer = isMatch("aa", "a*");
+    bool answer = isMatch("a", "ab*");
     printf("answer: %d\n", answer);
     return 0;
 }
@@ -180,6 +180,34 @@ bool isMatch(char *s, char *p) {
 
     const int source_str_length = strlen(s);
     const int pattern_str_length = strlen(p);
+
+    if (pattern_str_length == 2 && p[0] == '.' && p[1] == '*') {
+        result = true;
+        goto only_response_result;
+    }
+
+
+    for (int i = 0; i < source_str_length; i++) {
+        if (p[i] == '*') {
+            goto normal_task;
+        }
+    }
+
+    if (source_str_length != pattern_str_length) {
+        goto only_response_result;
+    } else {
+        for (int i = 0; i < source_str_length; i++) {
+            if (s[i] != p[i] && p[i] != '.') {
+                goto only_response_result;
+            }
+        }
+        result = true;
+        goto only_response_result;
+    }
+
+normal_task:
+
+
     int patterns_size = 1;
 
     char **patterns = (char **)malloc(sizeof(char *) * 20);
@@ -335,5 +363,6 @@ response_answer:
     }
     free(patterns);
 
+only_response_result:
     return result;
 }
