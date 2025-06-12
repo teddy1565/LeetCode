@@ -122,7 +122,7 @@ after_special_case_checked:
 
                 for (int m = i + 1; m < patterns_size; m++) {
 
-                    if (patterns[m][0] == '.' && patterns[m][1] == '*') {
+                    if (patterns[m][0] == pattern[0] && patterns[m][1] == '*') {
                         break;
                     }
                     strcat(snapshot_pattern, patterns[m]);
@@ -140,11 +140,15 @@ after_special_case_checked:
 
                     if (match_result == true) {
                         match_index = m;
-                        break;
+                        goto matched_signle_chr_with_star;
                     }
 
                     char temp = *(source_str_cpy)++;
                 }
+                while(pattern[0] == s[match_index]) {
+                    match_index++;
+                }
+matched_signle_chr_with_star:
                 free(snapshot_pattern);
                 free(source_str_cpy_header);
             } else {
@@ -342,7 +346,7 @@ after_special_case_checked:
 
         if (pattern[1] == '*') {
             if (pattern[0] != '.') {
-                printf("\t\t\t|- (task .*) MatchIndex: %d\n", match_index);
+                printf("\t\t\t|- (task %c*) MatchIndex: %d\n", pattern[0], match_index);
                 char *snapshot_pattern = (char *) malloc(sizeof(char) * 25);
                 char *source_str_cpy = (char *)malloc(sizeof(char) * 25);
 
@@ -354,7 +358,7 @@ after_special_case_checked:
 
                 for (int m = i + 1; m < patterns_size; m++) {
 
-                    if (patterns[m][0] == '.' && patterns[m][1] == '*') {
+                    if (patterns[m][0] == pattern[0] && patterns[m][1] == '*') {
                         break;
                     }
                     strcat(snapshot_pattern, patterns[m]);
@@ -376,13 +380,19 @@ after_special_case_checked:
                     bool match_result = isMatch_no_display_ver(source_str_cpy, snapshot_pattern);
 
                     if (match_result == true) {
-                        printf("\t\t\t|- (task %c*) MatchIndex %d => %d\n", pattern[0], match_index, m);
+                        printf("\t\t\t|- (task %c*) Matched MatchIndex %d => %d\n", pattern[0], match_index, m);
                         match_index = m;
-                        break;
+                        goto matched_signle_chr_with_star;
                     }
 
                     char temp = *(source_str_cpy)++;
                 }
+                while(pattern[0] == s[match_index]) {
+                    match_index++;
+                }
+
+
+matched_signle_chr_with_star:
                 printf("\n");
                 free(snapshot_pattern);
                 free(source_str_cpy_header);
