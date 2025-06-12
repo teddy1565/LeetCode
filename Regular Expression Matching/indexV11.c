@@ -184,11 +184,16 @@ matched_signle_chr_with_star:
 
                     if (match_result == true) {
                         match_index = m;
-                        break;
+                        goto matched_all_chr_with_star;
                     }
 
                     char temp = *(source_str_cpy)++;
                 }
+
+
+                match_index = source_str_length;
+
+matched_all_chr_with_star:
                 free(snapshot_pattern);
                 free(source_str_cpy_header);
             }
@@ -433,11 +438,15 @@ matched_signle_chr_with_star:
                     if (match_result == true) {
                         printf("\t\t\t|- (task %c*) MatchIndex %d => %d\n", pattern[0], match_index, m);
                         match_index = m;
-                        break;
+                        goto matched_all_chr_with_star;
                     }
 
                     char temp = *(source_str_cpy)++;
                 }
+                printf("\t\t\t|- (task .*) match_index: [ %d => %d ]\n", match_index, source_str_length);
+                match_index = source_str_length;
+
+matched_all_chr_with_star:
                 printf("\n");
                 free(snapshot_pattern);
                 free(source_str_cpy_header);
@@ -502,9 +511,11 @@ int main(void) {
     assert(isMatch("aaa", "ab*a*c*a") == true);
     assert(isMatch("aa", "a*") == true);
     assert(isMatch("mississippi", "mis*is*p*.") == false);
+    assert(isMatch("mississippi", "mis*is*ip*.") == true);
+    assert(isMatch("aba", ".*.*") == true);
+    assert(isMatch("aba", "..*") == true);
 
-
-    bool answer = isMatch("mississippi", "mis*is*ip*.");
+    bool answer = isMatch("aabcbcbcaccbcaabc", ".*a*aa*.*b*.c*.*a*");
     printf("answer: %d\n", answer);
 
     // answer = isMatch("a", "ab*a");
