@@ -145,7 +145,7 @@ after_special_case_checked:
 
                     char temp = *(source_str_cpy)++;
                 }
-                while(pattern[0] == s[match_index]) {
+                while(match_index < source_str_length && pattern[0] == s[match_index]) {
                     match_index++;
                 }
 matched_signle_chr_with_star:
@@ -387,7 +387,7 @@ after_special_case_checked:
 
                     char temp = *(source_str_cpy)++;
                 }
-                while(pattern[0] == s[match_index]) {
+                while(match_index < source_str_length && pattern[0] == s[match_index]) {
                     match_index++;
                 }
 
