@@ -25,9 +25,150 @@ int main(void) {
     // assert(isMatch("acbbcbcbcbaaacaac", "ac*.a*ac*.*ab*b*ac") == false); // 0
     // assert(isMatch("bbacbcabbbbbcacabb", "aa*c*b*a*.*a*a.*.") == false); // 0
     // isMatch("abcde", "b*.c*..*.b*b*.*c*");
-    bool answer = isMatch("baaaaacc", "c*b*ba*c*c");
+    bool answer = isMatch("aa", "a*");
     printf("answer: %d\n", answer);
     return 0;
+}
+
+bool isMatch_no_display_ver(char *s, char *p) {
+
+    bool result = false;
+
+    const int source_str_length = strlen(s);
+    const int pattern_str_length = strlen(p);
+    int patterns_size = 1;
+
+    char **patterns = (char **)malloc(sizeof(char *) * 20);
+    memset(patterns, 0, 20);
+
+    for (int i = 0; i < 20; i++) {
+        patterns[i] = (char *)malloc(sizeof(char) * 3);
+        memset(patterns[i], 0, 3);
+    }
+
+    for (int i = 0, k = 0; i < pattern_str_length; i++) {
+        patterns[k][0] = p[i];
+        if (p[i + 1] != '*') {
+            patterns[k][1] = '\0';
+            k++;
+            patterns_size++;
+        } else {
+            patterns[k][1] = '*';
+            patterns[k][2] = '\0';
+            k++;
+            i++;
+            patterns_size++;
+        }
+    }
+    for (int i = 1; i < patterns_size; i++) {
+        if (patterns[i - 1][0] == '\30') {
+            continue;
+        } else if (strcmp(patterns[i - 1], patterns[i]) == 0 && patterns[i - 1][1] == '*') {
+
+
+            patterns[i - 1][0] = '\30';
+            patterns[i - 1][1] = '\0';
+        } else if (
+            patterns[i - 1][0] != '.' && patterns[i - 1][1] == '*' &&
+            patterns[i][1] != '*' &&
+            (patterns[i - 1][0] == patterns[i][0])
+        ) {
+
+            char temp_swap = patterns[i - 1][0];
+            patterns[i - 1][0] = patterns[i][0];
+            patterns[i - 1][1] = '\0';
+
+            patterns[i][0] = temp_swap;
+            patterns[i][1] = '*';
+            patterns[i][2] = '\0';
+
+        }
+    }
+
+
+    int match_index = 0;
+
+    for (int i = 0; i < patterns_size; i++) {
+        if (patterns[i][0] == '\30') {
+            continue;
+        }
+
+        char *pattern = patterns[i];
+
+        if (pattern[1] == '*') {
+            if (pattern[0] != '.') {
+                while (s[match_index] == pattern[0]) {
+                    match_index++;
+                }
+                if (match_index == source_str_length) {
+                    result = true;
+                    goto response_answer;
+                }
+            } else {
+                char *snapshot_pattern = (char *) malloc(sizeof(char) * 25);
+                char *source_str_cpy = (char *)malloc(sizeof(char) * 25);
+
+                memset(snapshot_pattern, 0, 25);
+                memset(source_str_cpy, 0, 25);
+                strcpy(source_str_cpy, s);
+                char *source_str_cpy_header = source_str_cpy;
+                for (int m = i + 1; m < patterns_size; m++) {
+                    if (patterns[m][0] == '.' && patterns[m][1] == '*') {
+                        break;
+                    }
+                    strcat(snapshot_pattern, patterns[m]);
+                }
+
+                for (int m = 0; m < match_index; m++) {
+                    char temp = *(source_str_cpy)++;
+                }
+                for (int m = match_index; m < source_str_length; m++) {
+                    if (s[m] == '\0') {
+                        break;
+                    }
+                    bool match_result = isMatch_no_display_ver(source_str_cpy, snapshot_pattern);
+
+                    if (match_result == true) {
+                        match_index = m;
+                        break;
+                    }
+
+                    char temp = *(source_str_cpy)++;
+                }
+                free(snapshot_pattern);
+                free(source_str_cpy_header);
+                goto response_answer;
+            }
+        } else {
+            if (pattern[0] != '.') {
+                if (s[match_index] == pattern[0]) {
+                    match_index++;
+                    if (match_index == source_str_length) {
+                        result = true;
+                        goto response_answer;
+                    }
+                } else {
+                    goto response_answer;
+                }
+            } else {
+                match_index++;
+                if (match_index == source_str_length) {
+                    result = true;
+                    goto response_answer;
+                }
+            }
+        }
+    }
+
+
+response_answer:
+
+    for (int i = 0; i < patterns_size; i++) {
+        free(patterns[i]);
+    }
+    free(patterns);
+
+    return result;
 }
 
 bool isMatch(char *s, char *p) {
@@ -82,12 +223,15 @@ bool isMatch(char *s, char *p) {
         } else if (
             patterns[i - 1][0] != '.' && patterns[i - 1][1] == '*' &&
             patterns[i][1] != '*' &&
-            patterns[i - 1][0] == patterns[i][0]
+            (patterns[i - 1][0] == patterns[i][0])
         ) {
             printf("\t\t\t\t--(swap). %s\t%s\n", patterns[i - 1], patterns[i]);
 
+            char temp_swap = patterns[i - 1][0];
+            patterns[i - 1][0] = patterns[i][0];
             patterns[i - 1][1] = '\0';
 
+            patterns[i][0] = temp_swap;
             patterns[i][1] = '*';
             patterns[i][2] = '\0';
 
@@ -117,21 +261,72 @@ bool isMatch(char *s, char *p) {
                     goto response_answer;
                 }
             } else {
+                printf("\t\t\t|- (task .*) MatchIndex: %d\n", match_index);
+                char *snapshot_pattern = (char *) malloc(sizeof(char) * 25);
+                char *source_str_cpy = (char *)malloc(sizeof(char) * 25);
 
+                memset(snapshot_pattern, 0, 25);
+                memset(source_str_cpy, 0, 25);
+                strcpy(source_str_cpy, s);
+                char *source_str_cpy_header = source_str_cpy;
+
+
+                for (int m = i + 1; m < patterns_size; m++) {
+
+                    if (patterns[m][0] == '.' && patterns[m][1] == '*') {
+                        break;
+                    }
+                    strcat(snapshot_pattern, patterns[m]);
+                    // i = m;
+                }
+
+
+
+                printf("\t\t\t|- (task .*) snapshot_pattern: %s\n", snapshot_pattern);
+
+                for (int m = 0; m < match_index; m++) {
+                    char temp = *(source_str_cpy)++;
+                }
+                printf("\t\t\t|- (task .*) source_str_cpy: %s\n", source_str_cpy);
+                for (int m = match_index; m < source_str_length; m++) {
+                    if (s[m] == '\0') {
+                        break;
+                    }
+                    bool match_result = isMatch_no_display_ver(source_str_cpy, snapshot_pattern);
+
+                    if (match_result == true) {
+                        match_index = m;
+                        break;
+                    }
+
+                    char temp = *(source_str_cpy)++;
+                }
+                printf("\n");
+                free(snapshot_pattern);
+                free(source_str_cpy_header);
             }
         } else {
             if (pattern[0] != '.') {
                 if (s[match_index] == pattern[0]) {
                     match_index++;
+                    if (match_index == source_str_length) {
+                        result = true;
+                        goto response_answer;
+                    }
                 } else {
                     printf("\t\t\t|==> (no match)\tMatchIndex:%d\tpattern_char:[%c]\tsource_char:[%c]\n", match_index, pattern[0], s[match_index]);
                     goto response_answer;
                 }
             } else {
                 match_index++;
+                if (match_index == source_str_length) {
+                    result = true;
+                    goto response_answer;
+                }
             }
         }
     }
+
 
 response_answer:
 
