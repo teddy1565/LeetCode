@@ -199,7 +199,7 @@ matched_signle_chr_with_star:
                             break;
                         }
                     }
-                    while(s[match_index] != barrier_chr_) {
+                    while(match_index < source_str_length && s[match_index] != barrier_chr_) {
                         match_index++;
                     }
                 } else {
@@ -487,7 +487,7 @@ matched_signle_chr_with_star:
                     }
 
                     printf("\t\t\t| === INFO ===> (task .*) > next_pattern: %s\tbarrier_chr: %c\n\n", patterns[i + 1], barrier_chr_);
-                    while(s[match_index] != barrier_chr_) {
+                    while(match_index < source_str_length && s[match_index] != barrier_chr_) {
                         printf("\t\t\t|- (task .*) match_index: [ %d => %d ]\n", match_index, match_index + 1);
                         match_index++;
                     }
