@@ -4,39 +4,6 @@
 #include <stdbool.h>
 #include <assert.h>
 
-bool isMatch(char* s, char* p);
-
-int main(void) {
-
-    // assert(isMatch("abcdede", "ab.*de") == true);
-    // assert(isMatch("bbbba", "ac*.a*ac*.*.*a*a") == true); // 1
-    // assert(isMatch("bbbba", ".*a*a") == true); // 1
-    // assert(isMatch("baba", "b*.*") == true); // 1
-    // assert(isMatch("bcaccbbacbcbcab", "b*.c*..*.b*b*.*c*") == true); // 1
-    // assert(isMatch("bcaccbbacbcbcab", "b*.c*..*.b*b*.*c*") == true); // 1
-    // assert(isMatch("abb", "a.*b") == true); // 1
-
-    // assert(isMatch("acbdb", "aa*cbdb") == true);
-    // assert(isMatch("aaa", "ab*a*c*a") == true);
-    // assert(isMatch("a", "ab*") == true);
-    // assert(isMatch("aa", "a*") == true);
-
-
-    // assert(isMatch("acbbcbcbcbaaacaac", "ac*.a*ac*.*ab*b*ac") == false); // 0
-    // assert(isMatch("bbacbcabbbbbcacabb", "aa*c*b*a*.*a*a.*.") == false); // 0
-    // isMatch("abcde", "b*.c*..*.b*b*.*c*");
-    assert(isMatch("aab", "c*a*b") == true);
-    assert(isMatch("a", "ab*a") == false);
-    assert(isMatch("a", "ab*") == true);
-    assert(isMatch("aaa", "ab*a*c*a") == true);
-    assert(isMatch("aa", "a*") == true);
-    bool answer = isMatch("mississippi", "mis*is*p*.");
-    printf("answer: %d\n", answer);
-
-    // answer = isMatch("a", "ab*a");
-    // printf("answer: %d\n", answer);
-    return 0;
-}
 
 bool isMatch_no_display_ver(char *s, char *p) {
 
@@ -155,7 +122,7 @@ after_special_case_checked:
 
                 for (int m = i + 1; m < patterns_size; m++) {
 
-                    if (patterns[m][0] == '.' && patterns[m][1] == '*') {
+                    if (patterns[m][0] != pattern[0] && patterns[m][1] == '*') {
                         break;
                     }
                     strcat(snapshot_pattern, patterns[m]);
@@ -225,16 +192,6 @@ after_special_case_checked:
             if (pattern[0] != '.') {
                 if (s[match_index] == pattern[0]) {
                     match_index++;
-                    // if (match_index == source_str_length && i == patterns_size) {
-                    //     result = true;
-                    //     goto response_answer;
-                    // } else if (match_index == source_str_length && i == (patterns_size - 1)) {
-                    //     result = true;
-                    //     goto response_answer;
-                    // } else if (match_index == source_str_length && i != patterns_size) {
-
-                    //     goto response_answer;
-                    // }
                 } else if (s[match_index] != pattern[0]) {
                     goto response_answer;
                 }
@@ -397,7 +354,7 @@ after_special_case_checked:
 
                 for (int m = i + 1; m < patterns_size; m++) {
 
-                    if (patterns[m][0] == '.' && patterns[m][1] == '*') {
+                    if (patterns[m][0] != pattern[0] && patterns[m][1] == '*') {
                         break;
                     }
                     strcat(snapshot_pattern, patterns[m]);
@@ -419,6 +376,7 @@ after_special_case_checked:
                     bool match_result = isMatch_no_display_ver(source_str_cpy, snapshot_pattern);
 
                     if (match_result == true) {
+                        printf("\t\t\t|- (task %c*) MatchIndex %d => %d\n", pattern[0], match_index, m);
                         match_index = m;
                         break;
                     }
@@ -463,6 +421,7 @@ after_special_case_checked:
                     bool match_result = isMatch_no_display_ver(source_str_cpy, snapshot_pattern);
 
                     if (match_result == true) {
+                        printf("\t\t\t|- (task %c*) MatchIndex %d => %d\n", pattern[0], match_index, m);
                         match_index = m;
                         break;
                     }
@@ -478,16 +437,6 @@ after_special_case_checked:
                 if (s[match_index] == pattern[0]) {
                     match_index++;
                     printf("\t\t\t|==> (task info)\tMatchIndex:%d\tpattern_char:[%c]\tsource_char:[%c]\tpatternsIndex: %d\tpatterns_size: %d\n", match_index, pattern[0], s[match_index], i, patterns_size);
-                    // if (match_index == source_str_length && i == patterns_size) {
-                    //     result = true;
-                    //     goto response_answer;
-                    // } else if (match_index == source_str_length && i == (patterns_size - 1)) {
-                    //     result = true;
-                    //     goto response_answer;
-                    // } else if (match_index == source_str_length && i != patterns_size) {
-                    //     printf("\t\t\t|==> (no match)\tMatchIndex:%d\tpattern_char:[%c]\tsource_char:[%c]\tpatternsIndex: %d\tpatterns_size: %d\n", match_index, pattern[0], s[match_index], i, patterns_size);
-                    //     goto response_answer;
-                    // }
                 } else if (s[match_index] != pattern[0]) {
                     printf("\t\t\t|==> (no match)\tMatchIndex:%d\tpattern_char:[%c]\tsource_char:[%c]\tpatternsIndex: %d\tpatterns_size: %d\n", match_index, pattern[0], s[match_index], i, patterns_size);
                     goto response_answer;
@@ -515,4 +464,40 @@ response_answer:
 
 only_response_result:
     return result;
+}
+
+
+int main(void) {
+
+    // assert(isMatch("abcdede", "ab.*de") == true);
+    // assert(isMatch("bbbba", "ac*.a*ac*.*.*a*a") == true); // 1
+    // assert(isMatch("bbbba", ".*a*a") == true); // 1
+    // assert(isMatch("baba", "b*.*") == true); // 1
+    // assert(isMatch("bcaccbbacbcbcab", "b*.c*..*.b*b*.*c*") == true); // 1
+    // assert(isMatch("bcaccbbacbcbcab", "b*.c*..*.b*b*.*c*") == true); // 1
+    // assert(isMatch("abb", "a.*b") == true); // 1
+
+    // assert(isMatch("acbdb", "aa*cbdb") == true);
+    // assert(isMatch("aaa", "ab*a*c*a") == true);
+    // assert(isMatch("a", "ab*") == true);
+    // assert(isMatch("aa", "a*") == true);
+
+
+    // assert(isMatch("acbbcbcbcbaaacaac", "ac*.a*ac*.*ab*b*ac") == false); // 0
+    // assert(isMatch("bbacbcabbbbbcacabb", "aa*c*b*a*.*a*a.*.") == false); // 0
+    // isMatch("abcde", "b*.c*..*.b*b*.*c*");
+    assert(isMatch("aab", "c*a*b") == true);
+    assert(isMatch("a", "ab*a") == false);
+    assert(isMatch("a", "ab*") == true);
+    assert(isMatch("aaa", "ab*a*c*a") == true);
+    assert(isMatch("aa", "a*") == true);
+    assert(isMatch("mississippi", "mis*is*p*.") == false);
+
+
+    bool answer = isMatch("mississippi", "mis*is*ip*.");
+    printf("answer: %d\n", answer);
+
+    // answer = isMatch("a", "ab*a");
+    // printf("answer: %d\n", answer);
+    return 0;
 }
