@@ -28,8 +28,8 @@ int main(void) {
     assert(isMatch("aab", "c*a*b") == true);
     assert(isMatch("a", "ab*a") == false);
     assert(isMatch("a", "ab*") == true);
-
-    bool answer = isMatch("aaa", "ab*a*c*a");
+    assert(isMatch("aaa", "ab*a*c*a") == true);
+    bool answer = isMatch("aa", "a*");
     printf("answer: %d\n", answer);
 
     // answer = isMatch("a", "ab*a");
@@ -45,6 +45,14 @@ bool isMatch_no_display_ver(char *s, char *p) {
     const int pattern_str_length = strlen(p);
 
     if (pattern_str_length == 2 && p[0] == '.' && p[1] == '*') {
+        result = true;
+        goto only_response_result;
+    } else if (pattern_str_length == 2 && p[1] == '*') {
+        for (int i = 0; i < source_str_length; i++) {
+            if (s[i] != p[0]) {
+                goto normal_task;
+            }
+        }
         result = true;
         goto only_response_result;
     }
@@ -131,14 +139,42 @@ normal_task:
 
         if (pattern[1] == '*') {
             if (pattern[0] != '.') {
-                while (s[match_index] == pattern[0]) {
-                    match_index++;
+                char *snapshot_pattern = (char *) malloc(sizeof(char) * 25);
+                char *source_str_cpy = (char *)malloc(sizeof(char) * 25);
+
+                memset(snapshot_pattern, 0, 25);
+                memset(source_str_cpy, 0, 25);
+                strcpy(source_str_cpy, s);
+                char *source_str_cpy_header = source_str_cpy;
+
+
+                for (int m = i + 1; m < patterns_size; m++) {
+
+                    if (patterns[m][0] == '.' && patterns[m][1] == '*') {
+                        break;
+                    }
+                    strcat(snapshot_pattern, patterns[m]);
+                    // i = m;
                 }
-                if (match_index == source_str_length && i == patterns_size) {
-                    printf("%d\t%d\n", i, patterns_size);
-                    result = true;
-                    goto response_answer;
+
+                for (int m = 0; m < match_index; m++) {
+                    char temp = *(source_str_cpy)++;
                 }
+                for (int m = match_index; m < source_str_length; m++) {
+                    if (s[m] == '\0') {
+                        break;
+                    }
+                    bool match_result = isMatch_no_display_ver(source_str_cpy, snapshot_pattern);
+
+                    if (match_result == true) {
+                        match_index = m;
+                        break;
+                    }
+
+                    char temp = *(source_str_cpy)++;
+                }
+                free(snapshot_pattern);
+                free(source_str_cpy_header);
             } else {
                 char *snapshot_pattern = (char *) malloc(sizeof(char) * 25);
                 char *source_str_cpy = (char *)malloc(sizeof(char) * 25);
@@ -233,6 +269,14 @@ bool isMatch(char *s, char *p) {
     const int pattern_str_length = strlen(p);
 
     if (pattern_str_length == 2 && p[0] == '.' && p[1] == '*') {
+        result = true;
+        goto only_response_result;
+    } else if (pattern_str_length == 2 && p[1] == '*') {
+        for (int i = 0; i < source_str_length; i++) {
+            if (s[i] != p[0]) {
+                goto normal_task;
+            }
+        }
         result = true;
         goto only_response_result;
     }
@@ -332,14 +376,49 @@ normal_task:
 
         if (pattern[1] == '*') {
             if (pattern[0] != '.') {
-                while (s[match_index] == pattern[0]) {
-                    match_index++;
+                printf("\t\t\t|- (task .*) MatchIndex: %d\n", match_index);
+                char *snapshot_pattern = (char *) malloc(sizeof(char) * 25);
+                char *source_str_cpy = (char *)malloc(sizeof(char) * 25);
+
+                memset(snapshot_pattern, 0, 25);
+                memset(source_str_cpy, 0, 25);
+                strcpy(source_str_cpy, s);
+                char *source_str_cpy_header = source_str_cpy;
+
+
+                for (int m = i + 1; m < patterns_size; m++) {
+
+                    if (patterns[m][0] == '.' && patterns[m][1] == '*') {
+                        break;
+                    }
+                    strcat(snapshot_pattern, patterns[m]);
+                    // i = m;
                 }
-                if (match_index == source_str_length && i == patterns_size) {
-                    printf("%d\t%d\n", i, patterns_size);
-                    result = true;
-                    goto response_answer;
+
+
+
+                printf("\t\t\t|- (task %c*) snapshot_pattern: %s\n", pattern[0], snapshot_pattern);
+
+                for (int m = 0; m < match_index; m++) {
+                    char temp = *(source_str_cpy)++;
                 }
+                printf("\t\t\t|- (task %c*) source_str_cpy: %s\n", pattern[0], source_str_cpy);
+                for (int m = match_index; m < source_str_length; m++) {
+                    if (s[m] == '\0') {
+                        break;
+                    }
+                    bool match_result = isMatch_no_display_ver(source_str_cpy, snapshot_pattern);
+
+                    if (match_result == true) {
+                        match_index = m;
+                        break;
+                    }
+
+                    char temp = *(source_str_cpy)++;
+                }
+                printf("\n");
+                free(snapshot_pattern);
+                free(source_str_cpy_header);
             } else {
                 printf("\t\t\t|- (task .*) MatchIndex: %d\n", match_index);
                 char *snapshot_pattern = (char *) malloc(sizeof(char) * 25);
