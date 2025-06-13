@@ -164,6 +164,7 @@ matched_signle_chr_with_star:
                 for (int m = i + 1; m < patterns_size; m++) {
 
                     if (patterns[m][0] == '.' && patterns[m][1] == '*') {
+                        strcat(snapshot_pattern, patterns[m]);
                         break;
                     }
                     strcat(snapshot_pattern, patterns[m]);
@@ -440,6 +441,7 @@ matched_signle_chr_with_star:
                 for (int m = i + 1; m < patterns_size; m++) {
 
                     if (patterns[m][0] == '.' && patterns[m][1] == '*') {
+                        strcat(snapshot_pattern, patterns[m]);
                         break;
                     }
                     strcat(snapshot_pattern, patterns[m]);
@@ -566,8 +568,9 @@ int main(void) {
     assert(isMatch("aba", "..*") == true);
     assert(isMatch("aabcbcbcaccbcaabc", ".*a*aa*.*b*.c*.*a*") == true);
     assert(isMatch("aab", "b.*") == false);
+    assert(isMatch("cabbbbcbcacbabc", ".*b.*.ab*.*b*a*c") == true);
 
-    bool answer = isMatch("cabbbbcbcacbabc", ".*b.*.ab*.*b*a*c");
+    bool answer = isMatch("bbcacbabbcbaaccabc", "b*a*a*.c*bb*b*.*.*");
     printf("answer: %d\n", answer);
 
     // answer = isMatch("a", "ab*a");
