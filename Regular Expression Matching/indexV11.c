@@ -187,9 +187,11 @@ matched_signle_chr_with_star:
                     // i = m;
                 }
 
+                if (strlen(snapshot_pattern) == 0) {
+                    goto after_match_simulator;
+                }
 
-
-
+match_simulator:
                 for (int m = 0; m < match_index; m++) {
                     char temp = *(source_str_cpy)++;
                 }
@@ -207,7 +209,7 @@ matched_signle_chr_with_star:
                     char temp = *(source_str_cpy)++;
                 }
 
-
+after_match_simulator:
                 if ((i + 1) < patterns_size) {
                     char barrier_chr_ = '\0';
                     for (int k = i + 1; k < patterns_size; k++) {
@@ -220,7 +222,9 @@ matched_signle_chr_with_star:
                         match_index++;
                     }
                 } else {
-                    match_index = source_str_length;
+                    while(match_index < source_str_length) {
+                        match_index++;
+                    }
                 }
 
 matched_all_chr_with_star:
@@ -502,14 +506,17 @@ matched_signle_chr_with_star:
                     // i = m;
                 }
 
-
-
                 printf("\t\t\t|- (task .*) snapshot_pattern: %s\n", snapshot_pattern);
+                if (strlen(snapshot_pattern) == 0) {
+                    goto after_match_simulator;
+                }
 
+match_simulator:
                 for (int m = 0; m < match_index; m++) {
                     char temp = *(source_str_cpy)++;
                 }
                 printf("\t\t\t|- (task .*) source_str_cpy: %s\n", source_str_cpy);
+
                 for (int m = match_index; m < source_str_length; m++) {
                     if (s[m] == '\0') {
                         break;
@@ -533,7 +540,7 @@ matched_signle_chr_with_star:
                 printf("\t\t\t| === INFO ===> (task .*) > pattern: [%s]\n\n", pattern);
 
 
-
+after_match_simulator:
                 if ((i + 1) < patterns_size) {
                     char barrier_chr_ = '\0';
                     for (int k = i + 1; k < patterns_size; k++) {
@@ -550,7 +557,9 @@ matched_signle_chr_with_star:
                     }
                 } else {
                     printf("\t\t\t|- (task .*) [not while] match_index: [ %d => %d ]\n\n", match_index, source_str_length);
-                    match_index = source_str_length;
+                    while(match_index < source_str_length) {
+                        match_index++;
+                    }
                 }
 
 matched_all_chr_with_star:
@@ -577,6 +586,7 @@ matched_all_chr_with_star:
     }
 
     if (match_index == source_str_length) {
+        printf("%d\t%d\n", match_index, source_str_length);
         result = true;
     }
 
@@ -648,6 +658,7 @@ int main(void) {
     assert(isMatch("bbcacbabbcbaaccabc", "b*a*a*.c*bb*b*.*.*") == true);
 
     bool answer = isMatch("bbcbbcbcbbcaabcacb", "a*.*ac*a*a*.a..*.*");
+    // bool answer = isMatch("bbcbbcbcbbcaabcacb", "a*.*ac*a*a*.a..*.*");
     // bool answer = isMatch("bbcacbabbcbaaccabc", "b*a*.c*bb*.*");
     // bool answer = isMatch("bbcacbabbcbaaccabc", "b*a*.c*bb*.*");
     printf("answer: %d\n", answer);
