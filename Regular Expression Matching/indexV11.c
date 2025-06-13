@@ -48,11 +48,23 @@ after_find_pattern_checked:
     } else if (pattern_str_length == 2 && p[1] == '*') {
         for (int i = 0; i < source_str_length; i++) {
             if (s[i] != p[0]) {
-                goto after_special_case_checked;
+                goto check_align_char;
             }
         }
         result = true;
         goto only_response_result;
+    }
+
+check_align_char:
+    if (source_str_length >= pattern_str_length) {
+        for (int i = 1; i < pattern_str_length; i++) {
+            if (p[i] == '*') {
+                break;
+            } else if (p[i - 1] != s[i - 1] && p[i - 1] != '.') {
+                result = false;
+                goto only_response_result;
+            }
+        }
     }
 
 
@@ -324,11 +336,23 @@ after_find_pattern_checked:
     } else if (pattern_str_length == 2 && p[1] == '*') {
         for (int i = 0; i < source_str_length; i++) {
             if (s[i] != p[0]) {
-                goto after_special_case_checked;
+                goto check_align_char;
             }
         }
         result = true;
         goto only_response_result;
+    }
+
+check_align_char:
+    if (source_str_length >= pattern_str_length) {
+        for (int i = 1; i < pattern_str_length; i++) {
+            if (p[i] == '*') {
+                break;
+            } else if (p[i - 1] != s[i - 1] && p[i - 1] != '.') {
+                result = false;
+                goto only_response_result;
+            }
+        }
     }
 
 
