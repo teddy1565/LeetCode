@@ -4,7 +4,6 @@
 #include <stdbool.h>
 #include <assert.h>
 
-
 bool isMatch_no_display_ver(char *s, char *p) {
 
     bool result = false;
@@ -16,6 +15,11 @@ bool isMatch_no_display_ver(char *s, char *p) {
 
     char **patterns = (char **)malloc(sizeof(char *) * 20);
     memset(patterns, 0, 20);
+
+    char *retry_other_p = (char *) malloc(sizeof(char) * 25);
+    memset(retry_other_p, 0, 25);
+    char *retry_other_p_header = retry_other_p;
+    strcpy(retry_other_p, p);
 
 
     for (int i = 0; i < pattern_str_length; i++) {
@@ -235,12 +239,31 @@ matched_all_chr_with_star:
 
 response_answer:
 
+
+
+    if (result == true) {
+        goto only_response_result;
+    }
+
+    goto retry_other_possible;
+
+retry_other_possible:
+
+
+    if (p[1] == '*' && p[0] != '.') {
+        *(retry_other_p)++;
+        *(retry_other_p)++;
+        result = isMatch_no_display_ver(s, retry_other_p);
+    }
+
+    retry_other_p = retry_other_p_header;
+
+only_response_result:
     for (int i = 0; i < patterns_size; i++) {
         free(patterns[i]);
     }
     free(patterns);
-
-only_response_result:
+    free(retry_other_p);
     return result;
 }
 
@@ -270,7 +293,10 @@ bool isMatch(char *s, char *p) {
     char **patterns = (char **)malloc(sizeof(char *) * 20);
     memset(patterns, 0, 20);
 
-
+    char *retry_other_p = (char *) malloc(sizeof(char) * 25);
+    memset(retry_other_p, 0, 25);
+    char *retry_other_p_header = retry_other_p;
+    strcpy(retry_other_p, p);
 
     for (int i = 0; i < pattern_str_length; i++) {
         if (p[i] == '*') {
@@ -392,7 +418,6 @@ after_special_case_checked:
                 strcpy(source_str_cpy, s);
                 char *source_str_cpy_header = source_str_cpy;
 
-
                 for (int m = i + 1; m < patterns_size; m++) {
 
                     if (patterns[m][0] == pattern[0] && patterns[m][1] == '*') {
@@ -427,7 +452,6 @@ after_special_case_checked:
                 while(match_index < source_str_length && pattern[0] == s[match_index]) {
                     match_index++;
                 }
-
 
 matched_signle_chr_with_star:
                 printf("\n");
@@ -534,12 +558,34 @@ matched_all_chr_with_star:
 
 response_answer:
 
+    if (result == true) {
+        goto only_response_result;
+    }
+
+    goto retry_other_possible;
+
+retry_other_possible:
+
+
+    if (p[1] == '*' && p[0] != '.') {
+        *(retry_other_p)++;
+        *(retry_other_p)++;
+        printf("\n****** Try Possible *******\n\n");
+        printf("  [ %s ]\n", retry_other_p);
+        printf("\n***************************\n\n");
+        result = isMatch_no_display_ver(s, retry_other_p);
+    }
+
+    retry_other_p = retry_other_p_header;
+    
+    
+
+only_response_result:
     for (int i = 0; i < patterns_size; i++) {
         free(patterns[i]);
     }
     free(patterns);
-
-only_response_result:
+    free(retry_other_p);
     return result;
 }
 
@@ -575,9 +621,11 @@ int main(void) {
     assert(isMatch("aabcbcbcaccbcaabc", ".*a*aa*.*b*.c*.*a*") == true);
     assert(isMatch("aab", "b.*") == false);
     assert(isMatch("cabbbbcbcacbabc", ".*b.*.ab*.*b*a*c") == true);
+    assert(isMatch("bbcacbabbcbaaccabc", "b*a*a*.c*bb*b*.*.*") == true);
 
-    // bool answer = isMatch("bbcacbabbcbaaccabc", "b*a*a*.c*bb*b*.*.*");
-    bool answer = isMatch("bbcacbabbcbaaccabc", "b*a*.c*bb*.*");
+    bool answer = isMatch("bbcbbcbcbbcaabcacb", "a*.*ac*a*a*.a..*.*");
+    // bool answer = isMatch("bbcacbabbcbaaccabc", "b*a*.c*bb*.*");
+    // bool answer = isMatch("bbcacbabbcbaaccabc", "b*a*.c*bb*.*");
     printf("answer: %d\n", answer);
 
     // answer = isMatch("a", "ab*a");
