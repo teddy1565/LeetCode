@@ -1,142 +1,284 @@
-/*
- * @lc app=leetcode id=10 lang=c
- *
- * [10] Regular Expression Matching
- */
-#include <stdbool.h>
+#include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
-#include <stdio.h>
+#include <stdbool.h>
+#include <assert.h>
 
-// * 意思是指0或多個前導元素
-// . 意思是指任意字元
+bool isMatch(char *s, char *p) {
 
-// @lc code=start
-bool isMatch(char* s, char* p) {
+    bool result = false;
 
-    const int source_string_length = strlen(s);
-    const int pattern_string_length = strlen(p);
+    const int source_str_length = strlen(s);
+    const int pattern_str_length = strlen(p);
 
-    // case
-    // single '*'
-    // single '.'
-    // multi '.*'
-    // multi '*.'
-    const char split_mark_star = '*';
-    const char split_mark_dot = '.';
+    int patterns_size = 0;
 
-    // if no any pattern
-    bool find_pattern = false;
-    for (int i = 0; i < source_string_length; i++) {
-        if (p[i] == split_mark_star || p[i] == split_mark_dot) {
-            find_pattern = true;
-            break;
+    char **patterns = (char **)malloc(sizeof(char *) * 20);
+    memset(patterns, 0, 20);
+
+    char *retry_other_p = (char *) malloc(sizeof(char) * 25);
+    memset(retry_other_p, 0, 25);
+    char *retry_other_p_header = retry_other_p;
+    strcpy(retry_other_p, p);
+
+
+    for (int i = 0; i < pattern_str_length; i++) {
+        if (p[i] == '*') {
+            goto after_find_pattern_checked;
         }
     }
 
-    if (find_pattern == false) {
-        if (source_string_length != pattern_string_length) {
-            return false;
+    if (source_str_length != pattern_str_length) {
+        goto only_response_result;
+    } else {
+        for (int i = 0; i < source_str_length; i++) {
+            if (s[i] != p[i] && p[i] != '.') {
+                goto only_response_result;
+            }
+        }
+        result = true;
+        goto only_response_result;
+    }
+
+after_find_pattern_checked:
+
+    if (pattern_str_length == 2 && p[0] == '.' && p[1] == '*') {
+        result = true;
+        goto only_response_result;
+    } else if (pattern_str_length == 2 && p[1] == '*') {
+        for (int i = 0; i < source_str_length; i++) {
+            if (s[i] != p[0]) {
+                goto check_align_char;
+            }
+        }
+        result = true;
+        goto only_response_result;
+    }
+
+check_align_char:
+    if (source_str_length >= pattern_str_length) {
+        for (int i = 1; i < pattern_str_length; i++) {
+            if (p[i] == '*') {
+                break;
+            } else if (p[i - 1] != s[i - 1] && p[i - 1] != '.') {
+                result = false;
+                goto only_response_result;
+            }
+        }
+    }
+
+
+
+
+after_special_case_checked:
+
+    for (int i = 0; i < 20; i++) {
+        patterns[i] = (char *)malloc(sizeof(char) * 3);
+        memset(patterns[i], 0, 3);
+    }
+
+    for (int i = 0, k = 0; i < pattern_str_length; i++) {
+        patterns[k][0] = p[i];
+        if (p[i + 1] != '*') {
+            patterns[k][1] = '\0';
+            k++;
+            patterns_size++;
         } else {
-            for (int i = 0; i < source_string_length; i++) {
-                if (s[i] != p[i]) {
-                    return false;
+            patterns[k][1] = '*';
+            patterns[k][2] = '\0';
+            k++;
+            i++;
+            patterns_size++;
+        }
+    }
+    for (int i = 1; i < patterns_size; i++) {
+        if (patterns[i - 1][0] == '\30') {
+            continue;
+        } else if (strcmp(patterns[i - 1], patterns[i]) == 0 && patterns[i - 1][1] == '*') {
+
+
+            patterns[i - 1][0] = '\30';
+            patterns[i - 1][1] = '\0';
+        } else if (
+            patterns[i - 1][0] != '.' && patterns[i - 1][1] == '*' &&
+            patterns[i][1] != '*' &&
+            (patterns[i - 1][0] == patterns[i][0])
+        ) {
+
+            char temp_swap = patterns[i - 1][0];
+            patterns[i - 1][0] = patterns[i][0];
+            patterns[i - 1][1] = '\0';
+
+            patterns[i][0] = temp_swap;
+            patterns[i][1] = '*';
+            patterns[i][2] = '\0';
+
+        }
+    }
+
+    int match_index = 0;
+
+    for (int i = 0; i < patterns_size; i++) {
+        if (patterns[i][0] == '\30' || patterns[i][0] == '\0') {
+            continue;
+        }
+
+        char *pattern = patterns[i];
+
+        if (pattern[1] == '*') {
+            if (pattern[0] != '.') {
+                char *snapshot_pattern = (char *) malloc(sizeof(char) * 25);
+                char *source_str_cpy = (char *)malloc(sizeof(char) * 25);
+
+                memset(snapshot_pattern, 0, 25);
+                memset(source_str_cpy, 0, 25);
+                strcpy(source_str_cpy, s);
+                char *source_str_cpy_header = source_str_cpy;
+
+
+                for (int m = i + 1; m < patterns_size; m++) {
+
+                    if (patterns[m][0] == pattern[0] && patterns[m][1] == '*') {
+                        break;
+                    }
+                    strcat(snapshot_pattern, patterns[m]);
+                    // i = m;
+                }
+
+                for (int m = 0; m < match_index; m++) {
+                    char temp = *(source_str_cpy)++;
+                }
+                for (int m = match_index; m < source_str_length; m++) {
+                    if (s[m] != pattern[0]) {
+                        break;
+                    }
+                    bool match_result = isMatch(source_str_cpy, snapshot_pattern);
+
+                    if (match_result == true) {
+                        match_index = m;
+                        goto matched_signle_chr_with_star;
+                    }
+
+                    char temp = *(source_str_cpy)++;
+                }
+                while(match_index < source_str_length && pattern[0] == s[match_index]) {
+                    match_index++;
+                }
+matched_signle_chr_with_star:
+                free(snapshot_pattern);
+                free(source_str_cpy_header);
+            } else {
+                char *snapshot_pattern = (char *) malloc(sizeof(char) * 25);
+                char *source_str_cpy = (char *)malloc(sizeof(char) * 25);
+
+                memset(snapshot_pattern, 0, 25);
+                memset(source_str_cpy, 0, 25);
+                strcpy(source_str_cpy, s);
+                char *source_str_cpy_header = source_str_cpy;
+
+
+                for (int m = i + 1; m < patterns_size; m++) {
+
+                    if (patterns[m][0] == '.' && patterns[m][1] == '*') {
+                        strcat(snapshot_pattern, patterns[m]);
+                        break;
+                    }
+                    strcat(snapshot_pattern, patterns[m]);
+                    // i = m;
+                }
+
+                if (strlen(snapshot_pattern) == 0) {
+                    goto after_match_simulator;
+                }
+
+match_simulator:
+                for (int m = 0; m < match_index; m++) {
+                    char temp = *(source_str_cpy)++;
+                }
+                for (int m = match_index; m < source_str_length; m++) {
+                    if (s[m] == '\0') {
+                        break;
+                    }
+                    bool match_result = isMatch(source_str_cpy, snapshot_pattern);
+
+                    if (match_result == true) {
+                        match_index = m;
+                        goto matched_all_chr_with_star;
+                    }
+
+                    char temp = *(source_str_cpy)++;
+                }
+
+after_match_simulator:
+                if ((i + 1) < patterns_size) {
+                    char barrier_chr_ = '\0';
+                    for (int k = i + 1; k < patterns_size; k++) {
+                        if (patterns[k][1] == '\0' && patterns[k][0] != '\30') {
+                            barrier_chr_ = patterns[k][0];
+                            break;
+                        }
+                    }
+                    while(match_index < source_str_length && s[match_index] != barrier_chr_) {
+                        match_index++;
+                    }
+                } else {
+                    while(match_index < source_str_length) {
+                        match_index++;
+                    }
+                }
+
+matched_all_chr_with_star:
+                free(snapshot_pattern);
+                free(source_str_cpy_header);
+            }
+        } else {
+            if (pattern[0] != '.' && match_index < source_str_length) {
+                if (s[match_index] == pattern[0]) {
+                    match_index++;
+                } else if (s[match_index] != pattern[0]) {
+                    result = false;
+                    goto response_answer;
+                }
+            } else {
+                match_index++;
+                if (match_index == source_str_length && i == patterns_size) {
+                    result = true;
+                    goto response_answer;
                 }
             }
-            return true;
         }
     }
 
-    // 記錄暫存的string
-    char *temp_s = (char*) malloc(sizeof(char) * (pattern_string_length + 1) * 2);
-
-    // 紀錄暫存的pattern，因為pattern可能不只一個
-    char *temp_p = (char*) malloc(sizeof(char) * (pattern_string_length + 1));
-
-    int s_group_length = 0;
-    int p_group_length = 0;
-
-
-    // 使用prev紀錄上一個是屬於string或pattern的狀態, 0表示string, 1表示pattern
-    for (int i = 0, prev = 0, temp_s_k = 0, temp_p_k = 0; i < pattern_string_length + 1; i++) {
-        if (p[i] == '\0') {
-            temp_s[temp_s_k] = '\0';
-            temp_p[temp_p_k] = '\0';
-            if (prev == 0) {
-                s_group_length++;
-            } else {
-                p_group_length++;
-            }
-            break;
-        }
-        if ((p[i] == split_mark_dot && prev == 0) || (p[i] == split_mark_star && prev == 0)) {
-            temp_s[temp_s_k] = '\0';
-            temp_s_k++;
-            s_group_length++;
-
-            temp_p[temp_p_k] = p[i];
-            temp_p_k++;
-            prev = 1;
-            continue;
-        }
-        if ((p[i] != split_mark_dot && prev == 1) && (p[i] != split_mark_star && prev == 1)) {
-            
-            temp_p[temp_p_k] = '\0';
-            temp_p_k++;
-            p_group_length++;
-
-            temp_s[temp_s_k] = p[i];
-            temp_s_k++;
-            prev = 0;
-            continue;
-        }
-
-
-
-        if (p[i] != split_mark_dot && p[i] != split_mark_star) {
-            temp_s[temp_s_k] = p[i];
-            temp_s_k++;
-            continue;
-        }
-        if (p[i] == split_mark_dot || p[i] == split_mark_star) {
-            
-            temp_p[temp_p_k] = p[i];
-            temp_p_k++;
-            continue;
-        }
+    if (match_index == source_str_length) {
+        result = true;
     }
 
-    // 用於儲存字串片段，主要用於debug
-    char *group_source_string_shared = (char*) malloc(sizeof(char) * (source_string_length + 1));
-    char *group_pattern_string_shared = (char*) malloc(sizeof(char) * (source_string_length + 1));
+response_answer:
 
-    // 將分類好的組合對應與解析
-    for (int i=0, j=0; (i <= s_group_length) || (j <= p_group_length); i++, j++) {
-        int k = 0, m = 0;
-        while(temp_s[i] != '\0') {
-            group_source_string_shared[k] = temp_s[i];
-            i++;
-            k++;
-        }
-        group_source_string_shared[k] = '\0';
-        k++;
-        
-        while(temp_p[j] != '\0') {
-            group_pattern_string_shared[m] = temp_p[j];
-            j++;
-            m++;
-        }
-        group_pattern_string_shared[m] = '\0';
-        m++;
-        printf("%s\n", group_source_string_shared);
-        printf("%s\n", group_pattern_string_shared);
-        printf("\n");
+
+
+    if (result == true) {
+        goto only_response_result;
     }
-    
-}
-// @lc code=end
 
-int main() {
-    isMatch("fuck", "abc.g*.");
-    return 0;
+    goto retry_other_possible;
+
+retry_other_possible:
+
+
+    if (p[1] == '*' && p[0] != '.') {
+        *(retry_other_p)++;
+        *(retry_other_p)++;
+        result = isMatch(s, retry_other_p);
+    }
+
+    retry_other_p = retry_other_p_header;
+
+only_response_result:
+    for (int i = 0; i < patterns_size; i++) {
+        free(patterns[i]);
+    }
+    free(patterns);
+    free(retry_other_p);
+    return result;
 }
