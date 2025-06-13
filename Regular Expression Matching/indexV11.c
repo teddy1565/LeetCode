@@ -334,14 +334,14 @@ after_special_case_checked:
         printf("%d.|  %s\n", i + 1, patterns[i]);
     }
     printf("\n");
-    printf("pattern trunc result:\n");
+    printf("pattern trunc task:\n");
     for (int i = 1; i < patterns_size; i++) {
         printf("%d.|\t%s\t%s\t%d\t|\n", i, patterns[i - 1], patterns[i], strcmp(patterns[i - 1], patterns[i]));
         if (patterns[i - 1][0] == '\30') {
             continue;
         } else if (strcmp(patterns[i - 1], patterns[i]) == 0 && patterns[i - 1][1] == '*') {
 
-
+            printf("\t\t\t\t|-(trunc):\t%s\t%s\n", patterns[i - 1], patterns[i]);
             patterns[i - 1][0] = '\30';
             patterns[i - 1][1] = '\0';
         } else if (
@@ -360,6 +360,12 @@ after_special_case_checked:
             patterns[i][2] = '\0';
 
         }
+    }
+
+    printf("\n");
+    printf("pattern trunc result: \n");
+    for (int i = 0; i < patterns_size; i++) {
+        printf("%d.|\t%s\t|\n", i, patterns[i]);
     }
 
     printf("\n");
@@ -570,7 +576,8 @@ int main(void) {
     assert(isMatch("aab", "b.*") == false);
     assert(isMatch("cabbbbcbcacbabc", ".*b.*.ab*.*b*a*c") == true);
 
-    bool answer = isMatch("bbcacbabbcbaaccabc", "b*a*a*.c*bb*b*.*.*");
+    // bool answer = isMatch("bbcacbabbcbaaccabc", "b*a*a*.c*bb*b*.*.*");
+    bool answer = isMatch("bbcacbabbcbaaccabc", "b*a*.c*bb*.*");
     printf("answer: %d\n", answer);
 
     // answer = isMatch("a", "ab*a");
