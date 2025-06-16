@@ -37,6 +37,7 @@ bool isMatch(char *s, char *p) {
             continue;
         }
         if (v[i][0] == 0 && p[i + 1] != '*') {
+            result = false;
             break;  // 代表根本不通
         }
         if (v[i][0] == 1) {
@@ -67,22 +68,29 @@ bool isMatch(char *s, char *p) {
                     }
                 } else {
                     printf("[%d %d %d %d]\n", j, i, x, y);
-                    continue;
                 }
 
                 // 以v[x][y]為起點
                 for (; x < source_str_length && y < pattern_str_length;) {
-                    printf(" -> [x:%d, y:%d]: %d\n", x, y, v[y][x]);
+                    
                     if ((y + 1) < pattern_str_length && p[y + 1] == '*') {   // 直接狀態往下轉移
                         y = y + 1;
                         continue;
                     }
 
+                    printf(" -> [x:%d, y:%d]: %d\n", x, y, v[y][x]);
+
                     if (v[x][y] == 0) {
+                        if (p[y] != '*') {
+                            result = false;
+                            break;
+                        }
+                    } else {
                         printf(" -> [x:%d, y:%d]: %d\n", x, y, v[y][x]);
-                        break;
+                        x = x + 1;
+                        result = true;
                     }
-                    x = x + 1;
+                    
                     y = y + 1;
                     
                     
@@ -133,7 +141,8 @@ int main(void) {
     // isMatch("aa", "a*"); // true
     // isMatch("mississippi", "mis*is*ip*."); // true
     // isMatch("mississippi", "mis*is*p*."); // false
-    isMatch("bbcaccbabbcbaaccabc", "..."); // true
+    // isMatch("bbcaccbabbcbaaccabc", "...*"); // true
+    isMatch("bbcbbcbcbbcaabcacb", "a*.*ac*a*a*.a..*.*"); // false
     // isMatch("bbacbcabbbbbcacabb", "aa*c*b*a*.*a*a.*."); // false
     // isMatch("a", "ab*a"); // false
     // isMatch("bbcbbcbcbbcaabcacb", "a*.*ac*a*a*.a..*.*"); // false
