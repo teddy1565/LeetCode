@@ -5,6 +5,7 @@
 
 bool isMatch(char *s, char *p) {
 
+    printf("==========================================\n\n");
     const int source_str_length = strlen(s);
     const int pattern_str_length = strlen(p);
 
@@ -37,6 +38,8 @@ bool isMatch(char *s, char *p) {
         }
         printf("\n");
     }
+
+    printf("\n\n");
 
     return false;
 }
