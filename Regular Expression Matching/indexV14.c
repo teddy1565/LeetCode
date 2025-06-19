@@ -3,7 +3,6 @@
 #include <string.h>
 #include <stdbool.h>
 
-
 bool isMatch(char *s, char *p) {
     bool result = false;
     printf("==========================================\n\n");
@@ -13,20 +12,20 @@ bool isMatch(char *s, char *p) {
     printf("s: %d\n", strlen(s));
     printf("p: %d\n", strlen(p));
 
-    int v[20][20] = { 0 };
+    bool v[20][20] = { false };
 
     for (int i=0; i < pattern_str_length; i++) {
         for (int j=0; j < source_str_length; j++) {
             if (p[i] == s[j] || p[i] == '.') {
-                v[i][j] = 1;
+                v[i][j] = true;
             } else if (p[i] == '*') {
                 if (s[j] == p[i - 1] || p[i - 1] == '.') {
-                    v[i][j] = 1;
+                    v[i][j] = true;
                 } else {
-                    v[i][j] = 0;
+                    v[i][j] = false;
                 }
             } else if (p[i] != s[j]) {
-                v[i][j] = 0;
+                v[i][j] = false;
             }
         }
     }
@@ -40,7 +39,7 @@ bool isMatch(char *s, char *p) {
             break;  // 代表根本不通
         }
         if (v[i][0] == 1) {
-            for (int j=0, k=0; j < source_str_length; j++) {
+            for (int j=0; j < source_str_length; j++) {
                 if (v[i][j] == 0) {
                     break;
                 }
@@ -88,14 +87,13 @@ bool isMatch(char *s, char *p) {
     printf("\n\n");
 
     printf("answer: %d\n", result);
-
     
     return result;
 }
 
 int main(void) {
-    isMatch("a", "ab*a"); // false
-    // isMatch("bbcbbcbcbbcaabcacb", "a*.*ac*a*a*.a..*.*"); // false
+    // isMatch("abd", "ab*a"); // false
+    isMatch("bbcbbcbcbbcaabcacb", "a*.*ac*a*a*.a..*.*"); // false
     // isMatch("asdvcavsdrfte", ".");
     return 0;
 }
