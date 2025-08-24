@@ -3,33 +3,20 @@
 #include <stdlib.h>
 
 char* longestCommonPrefix(char** strs, int strsSize) {
-    char *s = (char *) malloc(201);
-    memset(s, 0, 201);
-    int s_index = 0;
+    char *s = strs[0];
 
-    for (int j = 0; j < 200; j++) {
-        char c = '\0';
-        for (int i = 0; i < strsSize; i++) {
-            c = strs[i][j];
-            if (c == '\0') {
-                break;
-            }
-            if (s[j] == '\0') {
-                s[j] = c;
-            } else if (s[j] != c) {
+    for (int j = 0; j < strlen(s); j++) {
+        for (int i = 1; i < strsSize; i++) {
+            if (strs[i][j] != s[j]) {
                 s[j] = '\0';
-                goto leave_loop;
+                goto r;
             }
-        }
-        s[s_index++] = c;
-        if (c == '\0') {
-            leave_loop:
-            break;
         }
     }
 
+    r:
+
     return s;
-        
 }
 
 int main(void) {
