@@ -7,10 +7,7 @@
  */
 int** threeSum(int* nums, int numsSize, int* returnSize, int** returnColumnSizes) {
 
-    int **p = (int **) malloc(sizeof(int *));
-    
-    
-    for (int i = 0; i < numsSize;) {
+    for (int i = 0; i < numsSize; i++) {
 
         int target = nums[i];
         
@@ -29,7 +26,7 @@ int** threeSum(int* nums, int numsSize, int* returnSize, int** returnColumnSizes
                 }
             }
         }
-        i++;
+        
     }
 }
 
