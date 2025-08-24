@@ -28,7 +28,6 @@ char* longestCommonPrefix(char** strs, int strsSize) {
         }
     }
 
-    printf("%s\n", s);
     return s;
         
 }
