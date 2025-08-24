@@ -70,7 +70,7 @@ char *intToRoman(int num) {
     if (num == 4) {
         s[s_index++] = 'I';
         s[s_index++] = 'V';
-        num -= 5;
+        num -= 4;
     }
 
     for (; num >= 1; ) {
