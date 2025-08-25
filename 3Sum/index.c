@@ -53,9 +53,7 @@ int** threeSum(int* nums, int numsSize, int* returnSize, int** returnColumnSizes
     static int initStatus = 0;
     if (!initStatus) {
         initStatus = 1;
-        for (int i = 0; i < 17449; ++i) {
-            stupid[i] = 3;
-        }
+        for (int i = 0; i < 17449; ++i) stupid[i] = 3;
     }
 
     qsort(nums, numsSize, sizeof(int), &compare_cb);
@@ -64,6 +62,9 @@ int** threeSum(int* nums, int numsSize, int* returnSize, int** returnColumnSizes
 
 
     for (int i = 0; i < numsSize - 2; i++) {
+        if (i > 0 && nums[i] == nums[i - 1]) {
+            continue;
+        }
         int left = i + 1;
         int right = numsSize - 1;
         while(left < right && left != (right + 1)) {
@@ -90,10 +91,6 @@ int** threeSum(int* nums, int numsSize, int* returnSize, int** returnColumnSizes
             } else {
                 left++;
             }
-        }
-
-        while ((i + 1 < numsSize - 2) && nums[i] == nums[i + 1]) {
-            i++;
         }
     }
 
