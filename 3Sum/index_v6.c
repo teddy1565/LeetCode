@@ -27,7 +27,13 @@ static void printf_answer(int **nums, int rows) {
 #define MEM_BASE_X 10
 
 static int compare_cb(const void *a, const void *b) {
-    return *(int *)a - *(int *)b;
+    if (*(int *)a < *(int *)b) {
+        return -1;
+    } else if (*(int *)a == *(int *)b) {
+        return 0;
+    } else {
+        return 1;
+    }
 }
 
 
@@ -64,28 +70,21 @@ int** threeSum(int* nums, int numsSize, int* returnSize, int** returnColumnSizes
 
 
     for (int i = 0; i < numsSize - 2; i++) {
-
-        // if (i > 0 && (i + 1 < numsSize - 2) && nums[i] == nums[i - 1]) {
-        //     loop_end_call:
-        //     i++;
-        //     continue;
-        // }
-        
-        // printf("%d\n", i);
-        int left = i + 1;
-        int right = numsSize - 1;
-        while(left < right && left != (right + 1)) {
-            int sum = nums[left] + nums[right] + nums[i];
-            
+        for (int left = i + 1, right = numsSize - 1; (left <= numsSize - 2) && (right >= i + 2) && left != (right + 1) && left != right;) {
+            int sum = nums[i] + nums[left] + nums[right];
             if (sum == 0) {
-                // printf("%d %d %d\n", nums[i], nums[left], nums[right]);
-                int *temp_p = (int *) malloc(sizeof(int) * 3);
-                p[(*returnSize)] = temp_p;
+                
+                
+                // printf("%d %d %d | %d %d %d\n", i, left, right, nums[i], nums[left], nums[right]);
+                int *p_row = (int *) malloc(sizeof(int) * 3);
+                p_row[0] = nums[i];
+                p_row[1] = nums[left];
+                p_row[2] = nums[right];
+
+                p[(*returnSize)] = p_row;
                 (*returnSize) = (*returnSize) + 1;
-                // printf("r: %d\n", *returnSize);
-                temp_p[0] = nums[i];
-                temp_p[1] = nums[left];
-                temp_p[2] = nums[right];
+                
+                
                 
                 left_plus_check:
                     if ((left + 1 < right) && nums[left] == nums[left + 1]) {
@@ -99,13 +98,14 @@ int** threeSum(int* nums, int numsSize, int* returnSize, int** returnColumnSizes
                     }
                 left++;
                 right--;
-            } else if (sum > 0) {
-                right--;
-            } else {
-                left++;
-            }
-        }
 
+            } else if (sum < 0) {
+                left++;
+            } else {
+                right--;
+            }
+            
+        }
         check_base:
         if ((i + 1 < numsSize - 2) && nums[i] == nums[i + 1]) {
             i++;
@@ -163,16 +163,6 @@ int main(void) {
     returnSize = 0;
 
     threeSum(test_case_07, 4, &returnSize, &returnColumnSizes);
-    printf("return_size: %d\n", returnSize);
-    printf_answer(p, returnSize);
-    returnSize = 0;
-
-    threeSum(test_case_08, 4, &returnSize, &returnColumnSizes);
-    printf("return_size: %d\n", returnSize);
-    printf_answer(p, returnSize);
-    returnSize = 0;
-
-    threeSum(test_case_09, 4, &returnSize, &returnColumnSizes);
     printf("return_size: %d\n", returnSize);
     printf_answer(p, returnSize);
     returnSize = 0;
