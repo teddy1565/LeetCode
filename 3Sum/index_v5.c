@@ -58,9 +58,9 @@ int** threeSum(int* nums, int numsSize, int* returnSize, int** returnColumnSizes
 
     int mem_scale_x = 1;
     int p_row_index = 0;
-    int **p = (int **) malloc(sizeof(int **) * MEM_BASE_X * (mem_scale_x));
+    int **p = (int **) malloc(sizeof(int *) * MEM_BASE_X * (mem_scale_x));
     for (int i = 0; i < (MEM_BASE_X * mem_scale_x); i++) {
-        p[i] = (int *) malloc(sizeof(int *) * 3);
+        p[i] = (int *) malloc(sizeof(int) * 3);
     }
     
     for (int i = 0; i < numsSize - 2; i++) {
@@ -76,12 +76,12 @@ int** threeSum(int* nums, int numsSize, int* returnSize, int** returnColumnSizes
                 p_row_index++;
                 
                 if((*returnSize) == (MEM_BASE_X * mem_scale_x)) {
-                    int **temp_p = realloc(p, sizeof(int **) * MEM_BASE_X * (mem_scale_x + 1));
+                    int **temp_p = realloc(p, sizeof(int *) * MEM_BASE_X * (mem_scale_x + 1));
                     if (temp_p != NULL) {
                         p = temp_p;
                         temp_p = NULL;
                         for (int p_i = (MEM_BASE_X * mem_scale_x); p_i < (MEM_BASE_X * (mem_scale_x + 1)); p_i++) {
-                            p[p_i] = (int *) malloc(sizeof(int *) * 3);
+                            p[p_i] = (int *) malloc(sizeof(int) * 3);
                         }
                         mem_scale_x++;
                     }
