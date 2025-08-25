@@ -32,3 +32,9 @@ int** threeSum(int* nums, int numsSize, int* returnSize, int** returnColumnSizes
 int test_case_01[6] = { -1, 0, 1, 2, -1, -4 };
 int test_case_02[3] = { 0, 1, 1 };
 int test_case_03[3] = { 0, 0, 0 };
+int test_case_04[5] = { -2, 0, 0, 2, 2 };
+int test_case_05[5] = { 1, 2, 3, 4, 5 };
+int test_case_06[3] = { -1, 0, 1 };
+int test_case_07[4] = { 1,2,-2,-1 };
+
+
