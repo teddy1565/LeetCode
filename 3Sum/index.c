@@ -26,7 +26,7 @@ static void printf_answer(int **nums, int rows) {
 
 #define MEM_BASE_X 10
 
-static int compare_cb(const void *a, const void *b) {
+int compare_cb(const void *a, const void *b) {
     return *(int *)a - *(int *)b;
 }
 
@@ -64,28 +64,18 @@ int** threeSum(int* nums, int numsSize, int* returnSize, int** returnColumnSizes
 
 
     for (int i = 0; i < numsSize - 2; i++) {
-
-        // if (i > 0 && (i + 1 < numsSize - 2) && nums[i] == nums[i - 1]) {
-        //     loop_end_call:
-        //     i++;
-        //     continue;
-        // }
-        
-        // printf("%d\n", i);
         int left = i + 1;
         int right = numsSize - 1;
         while(left < right && left != (right + 1)) {
             int sum = nums[left] + nums[right] + nums[i];
             
             if (sum == 0) {
-                // printf("%d %d %d\n", nums[i], nums[left], nums[right]);
                 int *temp_p = (int *) malloc(sizeof(int) * 3);
-                p[(*returnSize)] = temp_p;
-                (*returnSize) = (*returnSize) + 1;
-                // printf("r: %d\n", *returnSize);
                 temp_p[0] = nums[i];
                 temp_p[1] = nums[left];
                 temp_p[2] = nums[right];
+                p[(*returnSize)] = temp_p;
+                (*returnSize)++;
                 
                 while ((left + 1 < right) && nums[left] == nums[left + 1]) {
                     left++;
