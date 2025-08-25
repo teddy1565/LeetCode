@@ -87,16 +87,12 @@ int** threeSum(int* nums, int numsSize, int* returnSize, int** returnColumnSizes
                 temp_p[1] = nums[left];
                 temp_p[2] = nums[right];
                 
-                left_plus_check:
-                    if ((left + 1 < right) && nums[left] == nums[left + 1]) {
-                        left++;
-                        goto left_plus_check;
-                    }
-                right_sub_check:
-                    if((right - 1 > left) && nums[right] == nums[right - 1]) {
-                        right--;
-                        goto right_sub_check;
-                    }
+                while ((left + 1 < right) && nums[left] == nums[left + 1]) {
+                    left++;
+                }
+                while ((right - 1 > left) && nums[right] == nums[right - 1]) {
+                    right--;
+                }
                 left++;
                 right--;
             } else if (sum > 0) {
@@ -106,10 +102,8 @@ int** threeSum(int* nums, int numsSize, int* returnSize, int** returnColumnSizes
             }
         }
 
-        check_base:
-        if ((i + 1 < numsSize - 2) && nums[i] == nums[i + 1]) {
+        while ((i + 1 < numsSize - 2) && nums[i] == nums[i + 1]) {
             i++;
-            goto check_base;
         }
     }
 
