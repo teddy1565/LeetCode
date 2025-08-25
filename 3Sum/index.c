@@ -26,12 +26,9 @@ static void printf_answer(int **nums, int rows) {
 
 #define MEM_BASE_X 10
 
-int compare_cb(const void *a, const void *b) {
+int compare(const void *a, const void *b) {
     return *(int *)a - *(int *)b;
 }
-
-
-
 
 int stupid[17449];
 
@@ -56,12 +53,12 @@ int** threeSum(int* nums, int numsSize, int* returnSize, int** returnColumnSizes
         for (int i = 0; i < 17449; ++i) stupid[i] = 3;
     }
 
-    qsort(nums, numsSize, sizeof(int), &compare_cb);
+    qsort(nums, numsSize, sizeof(int), &compare);
     
     int **p = (int **) malloc(sizeof(int *) * 17449);
 
 
-    for (int i = 0; i < numsSize - 2; i++) {
+    for (int i = 0; i < numsSize - 2 && !(nums[i] > 0); i++) {
         if (i > 0 && nums[i] == nums[i - 1]) {
             continue;
         }
@@ -93,7 +90,6 @@ int** threeSum(int* nums, int numsSize, int* returnSize, int** returnColumnSizes
             }
         }
     }
-
 
     (*returnColumnSizes) = stupid;
 
