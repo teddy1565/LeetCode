@@ -14,28 +14,6 @@ const char key_board[8][4] = {
     { 'w', 'x', 'y', 'z'}
 };
 
-const char key_board_w[4][8] = {
-    { 'a', 'd', 'g', 'j', 'm', 'p', 't', 'w' },
-    { 'b', 'e', 'h', 'k', 'n', 'q', 'u', 'x' },
-    { 'c', 'f', 'i', 'l', 'o', 'r', 'v', 'y' },
-    { '\0','\0','\0','\0','\0','s', '\0', 'z' },
-};
-
-// 00
-// 10
-// 20
-
-// 00
-// 10
-// 21
-
-// 00
-// 10
-// 22
-
-// 01
-// 10
-// 20
 
 char** letterCombinations(char* digits, int* returnSize) {
     
@@ -47,43 +25,34 @@ char** letterCombinations(char* digits, int* returnSize) {
     }
 
     int rows = 1;
+    int cols = 1;
 
     for (int i = 0; i < digits_size; i++) {
+        if (i > 0) {
+            cols = cols * digits_length_map[digits[i] - CHR_OFFSET];
+        }
         rows = rows * digits_length_map[digits[i] - CHR_OFFSET];
     }
+
+    printf("%d %d\n", rows, cols);
 
     answer = (char **) malloc(sizeof(char *) * rows);
     for (int i = 0; i < rows; i++) {
         answer[i] = (char *) malloc(sizeof(char) * (digits_size + 1));
         memset(answer[i], 0, (sizeof(char) * (digits_size + 1)));
-        
     }
+
 
 
 
     // for (int i = 0; i < rows; i++) {
-    for (int j = 0; j < digits_size; j++) {
-        int key_index = digits[j] - CHR_OFFSET;
-        for (int k = 0, sum = 0; k < digits_length_map[key_index]; k++) {
-            for (int i = sum; i < sum + digits_length_map[key_index]; i++) {
-                answer[i][j] = key_board[key_index][k];
-                printf("%c | %d %d | %d %d\n", key_board[key_index][k], i, j, key_index, k);
-            }
-            sum = sum + digits_length_map[key_index];
-        }
-        
-        printf("==----==\n");
-    }
+    //     for (int j = 0; j < digits_size; j++) {
+    //         printf("%c", answer[i][j]);
+    //     }
+    //     printf("\n");
     // }
 
-    for (int i = 0; i < rows; i++) {
-        for (int j = 0; j < digits_size; j++) {
-            printf("%c", answer[i][j]);
-        }
-        printf("\n");
-    }
-
-    printf("----------------\n");
+    // printf("----------------\n");
 
     
     return answer;
@@ -116,6 +85,7 @@ int main(void) {
     // printf("\t%d %d %d %d\n", 'w', 'x', 'y', 'z');
 
 
-    letterCombinations("23", &return_size);
+    // letterCombinations("7239", &return_size);
+    letterCombinations("2739", &return_size);
     return 0;
 }
