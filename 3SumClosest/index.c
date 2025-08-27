@@ -30,55 +30,36 @@ int compare_cb(const void *a, const void *b) {
  * a = n - (b + c)
  */
 int threeSumClosest(int* nums, int numsSize, int target) {
+    
+    if (numsSize == 3) {
+        return nums[0] + nums[1] + nums[2];
+    }
 
     qsort(nums, numsSize, sizeof(int), &compare_cb);
 
-    // for (int i = 0; i < numsSize; i++) {
-    //     printf("%d ", nums[i]);
-    // }
-    // printf("\n\n");
 
     int answer_bias = abs(target - (nums[0] + nums[1] + nums[2]));
     int answer = nums[0] + nums[1] + nums[2];
 
     for (int i = 0; i < numsSize-2; i++) {
-
         for (int left = i + 1, right = numsSize - 1; left < right;) {
             int sum = nums[i] + nums[left] + nums[right];
-            int bias = (target - sum);
-            // printf("\n\n%d %d %d   \t| %d\n", nums[i], nums[left], nums[right], sum);
-            // printf("bias: %d, answer_bias:%d\n", bias, answer_bias);
-            if (bias == 0) {
-                answer = sum;
-                goto result_answer;
-            } else if (abs(bias) == answer_bias) {
-                answer_bias = abs(bias);
-                answer = sum;
-                if (bias < 0) {
-                    right--;
-                } else {
-                    left++;
-                }
-            } else if (abs(bias) < answer_bias) {
-                answer_bias = abs(bias);
-                answer = sum;
-                if (bias < 0) {
-                    right--;
-                } else {
-                    left++;
-                }
-                
+            if (sum == target) {
+                return sum;
+            }
+            int bias = abs(target - sum);
+            
+            if (sum > target) {
+                right--;
             } else {
-                if (bias > 0) {
-                    left++;
-                } else {
-                    right--;
-                }
+                left++;
+            }
+            if (bias < answer_bias) {
+                answer_bias = bias;
+                answer = sum;
             }
         }
     }
-
-    result_answer:
     
     return answer;
    
