@@ -37,7 +37,6 @@ int threeSumClosest(int* nums, int numsSize, int target) {
 
     qsort(nums, numsSize, sizeof(int), &compare_cb);
 
-
     int answer_bias = abs(target - (nums[0] + nums[1] + nums[2]));
     int answer = nums[0] + nums[1] + nums[2];
 
@@ -47,13 +46,12 @@ int threeSumClosest(int* nums, int numsSize, int target) {
             if (sum == target) {
                 return sum;
             }
-            int bias = abs(target - sum);
-            
             if (sum > target) {
                 right--;
             } else {
                 left++;
             }
+            int bias = abs(target - sum);
             if (bias < answer_bias) {
                 answer_bias = bias;
                 answer = sum;
