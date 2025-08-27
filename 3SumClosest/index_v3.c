@@ -107,13 +107,15 @@ int threeSumClosest(int* nums, int numsSize, int target) {
             }
         }
     }
-    // printf("%d %d\n", base_reference, min_n);
+    printf("target: %d, base_reference: %d, base_reference_index: %d, min_n: %d\n", target, base_reference, base_reference_index, min_n);
+
     direction_base = base_reference;
     direction = min_n;
     answer_sum += base_reference;
     answer[answer_index] = base_reference_index;
     
     if (answer[answer_index] == -1) {
+        printf("answer: %d, answer_index: %d\n", answer[answer_index], answer_index);
         answer[answer_index] = answer[answer_index >> 1] + 1;
     }
     
@@ -127,17 +129,20 @@ int threeSumClosest(int* nums, int numsSize, int target) {
     end_func:
 
     
-
-    
     for (int i = 0, K = abs(answer_sum + nums[0]) - target; i < numsSize; i++) {
         if (abs(answer_sum + nums[i]) - target < K) {
+            if (i == answer[0] || i == answer[1] | i == answer[2]) {
+                continue;
+            }
             K = abs(answer_sum + nums[i]);
             answer[answer_index] = i;
         }
     }
 
     if (answer[answer_index] == -1) {
+        printf("answer: %d, answer_index: %d\n", answer[answer_index], answer_index);
         answer[answer_index] = answer[answer_index >> 1] + 1;
+        
     }
 
     printf("%d %d %d | %d %d %d\n------------\n\n", nums[answer[0]], nums[answer[1]], nums[answer[2]], answer[0], answer[1], answer[2]);
@@ -148,10 +153,25 @@ int threeSumClosest(int* nums, int numsSize, int target) {
 
 int main(void) {
 
-    threeSumClosest(test_case_01, 4, 1);
-    threeSumClosest(test_case_02, 3, 1);
-    threeSumClosest(test_case_03, 3, 0);
-    threeSumClosest(test_case_04, 9, 1);
-    threeSumClosest(test_case_05, 9, -2);
+    int answer = 0;
+
+    answer = threeSumClosest(test_case_01, 4, 1);
+    printf("answer: %d\n\n", answer);
+
+    answer = threeSumClosest(test_case_02, 3, 1);
+    printf("answer: %d\n\n", answer);
+    
+    answer = threeSumClosest(test_case_03, 3, 0);
+    printf("answer: %d\n\n", answer);
+    
+    answer = threeSumClosest(test_case_04, 9, 1);
+    printf("answer: %d\n\n", answer);
+    
+    answer = threeSumClosest(test_case_05, 9, -2);
+    printf("answer: %d\n\n", answer);
+
+    answer = threeSumClosest(test_case_06, 4, 100);
+    printf("answer: %d\n\n", answer);
+    
     return 0;
 }
