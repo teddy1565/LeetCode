@@ -80,12 +80,15 @@ char** letterCombinations(char* digits, int* returnSize) {
             if (back_trace_cols > 0) {
                 int c = back_trace_cols % digits_length_map[key_board_row];
                 key_board_col = key_board_col % cols;
+                printf("==============================================================> back_trace_cols: [%d][%d] %c -> %c, key_board[%d][%d]\n", i, j-1, answer[i][j - 1], key_board[digits[j-1] - CHR_OFFSET][c], digits[j-1] - CHR_OFFSET, c);
                 answer[i][j - 1] = key_board[digits[j-1] - CHR_OFFSET][c];
+                
             }
 
             if (back_trace_rows > 0) {
                 int c = (((i * (j - 1)) % total) + back_trace_rows) % digits_length_map[digits[j - 1] - CHR_OFFSET];
                 key_board_col = (key_board_col + back_trace_cols) % digits_length_map[j];
+                printf("==============================================================> back_trace_rows: [%d][%d] %c -> %c, key_board[%d][%d]\n", i, j-1, answer[i][j - 1], key_board[digits[j-1] - CHR_OFFSET][c], digits[j-1] - CHR_OFFSET, c);
                 answer[i][j - 1] = key_board[digits[j-1] - CHR_OFFSET][c];
                 
             }
