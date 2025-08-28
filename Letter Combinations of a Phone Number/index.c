@@ -1,17 +1,19 @@
 #include "index.h"
 
+
 #define CHR_OFFSET 50
+
 const int digits_length_map[8] = { 3, 3, 3, 3, 3, 4, 3, 4 };
 
-const char key_board[8][4] = {
-    { 'a', 'b', 'c' },
-    { 'd', 'e', 'f' },
-    { 'g', 'h', 'i' },
-    { 'j', 'k', 'l' },
-    { 'm', 'n', 'o'},
-    { 'p', 'q', 'r', 's'},
-    { 't', 'u', 'v'},
-    { 'w', 'x', 'y', 'z'}
+const char key_board[8][5] = {
+    { 'a', 'b', 'c', '\0', '\0' },
+    { 'd', 'e', 'f', '\0', '\0' },
+    { 'g', 'h', 'i', '\0', '\0' },
+    { 'j', 'k', 'l', '\0', '\0' },
+    { 'm', 'n', 'o', '\0', '\0' },
+    { 'p', 'q', 'r', 's' , '\0'},
+    { 't', 'u', 'v', '\0', '\0'},
+    { 'w', 'x', 'y', 'z' , '\0'}
 };
 
 
@@ -24,35 +26,72 @@ char** letterCombinations(char* digits, int* returnSize) {
         return answer;
     }
 
+    int total = 1;
     int rows = 1;
-    int cols = 1;
 
     for (int i = 0; i < digits_size; i++) {
         if (i > 0) {
-            cols = cols * digits_length_map[digits[i] - CHR_OFFSET];
+            rows = rows * digits_length_map[digits[i] - CHR_OFFSET];
         }
-        rows = rows * digits_length_map[digits[i] - CHR_OFFSET];
+        total = total * digits_length_map[digits[i] - CHR_OFFSET];
     }
 
-    printf("%d %d\n", rows, cols);
+    *returnSize = total;
 
-    answer = (char **) malloc(sizeof(char *) * rows);
-    for (int i = 0; i < rows; i++) {
+    int cols = total / rows;
+
+    printf("%d %d %d\n", total, rows, cols);
+
+    answer = (char **) malloc(sizeof(char *) * total);
+    for (int i = 0; i < total; i++) {
         answer[i] = (char *) malloc(sizeof(char) * (digits_size + 1));
         memset(answer[i], 0, (sizeof(char) * (digits_size + 1)));
     }
 
+    printf("i j | r c | br bc |\ttotal rows cols\n");
+    printf("--------------------------------\n\n");
+
+    for (int i = 0; i < total; i++) {
+        int k = 0;
+        for (int j = 0; j < digits_size; j++) {
+            int key_board_row = digits[j] - CHR_OFFSET;
+            int key_board_col = ((i*j) % total);
+            int back_trace_cols = key_board_col / cols;
+            int back_trace_rows = key_board_col / rows;
+
+            
+
+            if (back_trace_cols > 0) {
+                int c = back_trace_cols % digits_length_map[key_board_row];
+                key_board_col = key_board_col % cols;
+                answer[i][j - 1] = key_board[digits[j-1] - CHR_OFFSET][c];
+            }
+
+            if (back_trace_rows > 0) {
+                int c = (((i * (j - 1)) % total) + back_trace_rows);
+                key_board_col = (key_board_col + back_trace_cols) % digits_length_map[j];
+                answer[i][j - 1] = key_board[digits[j-1] - CHR_OFFSET][c];
+                
+            }
+
+            answer[i][j] = key_board[key_board_row][key_board_col];
+            printf("%d %d | %d %d | %d %d | %d %d %d | %c\n", i, j, key_board_row, key_board_col, back_trace_rows, back_trace_cols, total, rows, cols, answer[i][j]);
+        }
+        printf("\n");
+    }
 
 
 
-    // for (int i = 0; i < rows; i++) {
-    //     for (int j = 0; j < digits_size; j++) {
-    //         printf("%c", answer[i][j]);
-    //     }
-    //     printf("\n");
-    // }
 
-    // printf("----------------\n");
+
+    for (int i = 0; i < total; i++) {
+        for (int j = 0; j < digits_size; j++) {
+            printf("%c", answer[i][j]);
+        }
+        printf("\n");
+    }
+
+    printf("----------------\n");
 
     
     return answer;
@@ -86,6 +125,6 @@ int main(void) {
 
 
     // letterCombinations("7239", &return_size);
-    letterCombinations("2739", &return_size);
+    letterCombinations("234", &return_size);
     return 0;
 }
