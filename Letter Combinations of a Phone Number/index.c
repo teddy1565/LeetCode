@@ -61,18 +61,11 @@ char** letterCombinations(char* digits, int* returnSize) {
 
     int cols = total / rows;
 
-    #ifdef DEBUG
-    printf("%d %d %d %d\n", digits_size, total, rows, cols);
-    printf("----------------\n");
-    #endif
-
     answer = (char **) malloc(sizeof(char *) * total);
     for (int i = 0; i < total; i++) {
         answer[i] = (char *) malloc(sizeof(char) * (digits_size + 1));
         memset(answer[i], 0, (sizeof(char) * (digits_size + 1)));
     }
-
-    int offset = 1;
 
     for (int i = digits_size - 1, m = digits_size - i; i >= 0; i--) {
         int key_index = digits[i] - CHR_OFFSET;
@@ -83,10 +76,6 @@ char** letterCombinations(char* digits, int* returnSize) {
         }
         m = m * digits_length_map[key_index];
     }
-
-
-
-    
     return answer;
 }
 
