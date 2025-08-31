@@ -74,17 +74,62 @@ char** letterCombinations(char* digits, int* returnSize) {
 
     int offset = 1;
 
-    for (int i = digits_size - 1, m = digits_size - i; i >= 0; i--) {
+    for (int i = digits_size - 1, sj = digits_size - i; i >= 0; i--) {
         int key_index = digits[i] - CHR_OFFSET;
         
         for (int j = 0; j < total; j++) {
-            int k = (j / m) % digits_length_map[key_index];
+
+            int m = (digits_size - i); // 1, 2, 3
+            int n = (j % rows) + 1; // 0, 1, 2; 1, 2, 3
+            int x = (j / (i + 1));
+            int y = (j / digits_size);
+            int z = (j / n);
+
+            int t = (j / rows);
+            int u = (j / cols);
+            int v = (j / total);
+            
+            int k = (j / sj) % digits_length_map[key_index];
+            // int k = (j / integer_pow(cols, m - 1)) % digits_length_map[key_index];
+
+            printf("%d %d %d | %d %d %d %d | %d %c\n", j, sj, digits_length_map[key_index], t, u, v, k, key_index, key_board[key_index][k]);
+        
             answer[j][i] = key_board[key_index][k];
         }
-        m = m * digits_length_map[key_index];
+
+        sj = sj * digits_length_map[key_index];
+
+
+        printf("\n");
     }
 
 
+    printf("====================\n");
+    printf("total: %d, digits_size: %d\n", total, digits_size);
+    printf("--------\n");
+    for (int i = 0; i < digits_size; i++) {
+        printf("%c | [ ", digits[i]);
+        int key_index = digits[i] - CHR_OFFSET;
+        for (int j = 0; j < digits_length_map[key_index]; j++) {
+            printf("%c", key_board[key_index][j]);
+            if (j + 1 < digits_length_map[key_index]) {
+                printf(",");
+            }
+            printf(" ");
+        }
+        printf("]\n");
+    }
+
+    printf("---------------\n");
+
+    for (int i = 0; i < total; i++) {
+        for (int j = 0; j < digits_size; j++) {
+            printf("%c", answer[i][j]);
+        }
+        printf("\n");
+    }
+
+    printf("----------------\n");
 
     
     return answer;
