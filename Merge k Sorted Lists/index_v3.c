@@ -88,8 +88,10 @@ struct ListNode* mergeKLists(struct ListNode** lists, int listsSize) {
                 continue;
             } else if (lists[i]->val > list_p->val) {
                 if (list_p->next == NULL) {
+
                     list_p->next = lists[i];
                     lists[i] = lists[i]->next;
+                    
                 } else if (list_p->next->val > lists[i]->val) {
                     struct ListNode *temp_p1 = lists[i];
                     struct ListNode *temp_p2 = list_p->next;
@@ -106,9 +108,8 @@ struct ListNode* mergeKLists(struct ListNode** lists, int listsSize) {
                     // lists[i] = lists[i]->next;
                     // list_p = list_p->next;
                     // list_p->next = temp_p;
-                } else {
-                    list_p = list_p->next;
                 }
+                list_p = list_p->next;
             } else {
                 struct ListNode *temp_p1 = lists[i];
                 struct ListNode *temp_p2 = list_p;
