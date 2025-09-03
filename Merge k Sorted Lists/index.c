@@ -1,3 +1,14 @@
+/**
+ * @file index_v6.c
+ * @author JING TING XIONG (teddy1565@gmail.com)
+ * @brief 
+ * @version 0.1
+ * @date 2025-09-03
+ * 
+ * @copyright Copyright (c) 2025
+ * 
+ * I guess when pointer iterator, performance is very slow
+ */
 #include "index.h"
 
 struct ListNode **mock_data(int **nums, int nums_row_size, int *nums_col_size) {
@@ -54,59 +65,68 @@ void print_dataset(const struct ListNode **lists, int listsSize) {
     }
 }
 
+int compare_cb(const void *a, const void *b) {
+    // printf("%d ", (*(struct ListNode **)a)->val);
+    return (*(struct ListNode **)a)->val - (*(struct ListNode **)b)->val;
+}
+
 struct ListNode* mergeKLists(struct ListNode** lists, int listsSize) {
 
-    
-    struct ListNode *list_head = NULL;
+    if (listsSize == 0) {
+        return NULL;
+    }
+
+    struct ListNode *head_p = NULL;
+    struct ListNode *p = NULL;
+    struct ListNode *lag_p = NULL;
     for (int i = 0; i < listsSize; i++) {
         if (lists[i] == NULL) {
             continue;
         }
-        if (list_head == NULL || lists[i]->val < list_head->val) {
-            list_head = lists[i];
+        p = lists[i];
+        if (p != NULL && head_p == NULL) {
+            head_p = p;
+        }
+
+        if (lag_p != NULL) {
+            lag_p->next = p;
+        }
+        
+        while (p != NULL) {
+            lag_p = p;
+            p = p->next;
         }
     }
-    if (list_head == NULL) {
+
+    
+    if (listsSize == 1) {
+        return head_p;
+    } else if (head_p == NULL) {
         return NULL;
     }
 
-    struct ListNode *list_p = list_head;
-
-    struct ListNode **stage_list = (struct ListNode **) malloc(sizeof(struct ListNode*) * listsSize);
-
-    for (int i = 0; i < listsSize; i++) {
-        stage_list[i] = lists[i];
-        if (lists[i] == list_head) {
-            stage_list[i] = stage_list[i]->next;
-        }
-    }
-    
-    while(list_p != NULL) {
-        // struct ListNode *next_p = list_p->next;
-        for (int i = 0; i < listsSize; i++) {
-            if (stage_list[i] == NULL) {
-                continue;
-            } else if (list_p->next == NULL) {
-                list_p->next = stage_list[i];
-            } else if (stage_list[i]->val <= list_p->next->val) {
-                list_p->next = stage_list[i];
-            }
-        }
-
-        for (int i = 0; i < listsSize; i++) {
-            if (stage_list[i] == NULL) {
-                continue;
-            } else if (stage_list[i] == list_p->next) {
-                stage_list[i] = stage_list[i]->next;
-                break;
-            }
-        }
-
-        // list_p->next = next_p;
-        list_p = list_p->next;
+    p = head_p;
+    int length_count = 0;
+    while (p != NULL) {
+        p = p->next;
+        length_count++;
     }
 
-    return list_head;
+    p = head_p;
+
+    struct ListNode **list_copy = (struct ListNode **) malloc(sizeof(struct ListNode*) * length_count);
+    for (int i = 0; i < length_count; i++) {
+        (list_copy)[i] = p;
+        p = p->next;
+    }
+
+    qsort(list_copy, length_count, sizeof(struct ListNode *), &compare_cb);
+
+    for (int i = 0; i < length_count-1; i++) {
+        list_copy[i]->next = list_copy[i+1];
+    }
+    list_copy[length_count - 1]->next = NULL;
+    return list_copy[0];
 }
 
 
@@ -121,7 +141,7 @@ int main(void) {
     for (int i = 0; i < rows; i++) {
         datasets_01[i] = (int *) malloc(sizeof(int) * cols[i]);
     }
-    datasets_01[0][0] = 1;
+    datasets_01[0][0] = 3;
     datasets_01[0][1] = 4;
     datasets_01[0][2] = 5;
 
@@ -131,6 +151,8 @@ int main(void) {
 
     datasets_01[2][0] = 2;
     datasets_01[2][1] = 6;
+
+    //[[3,4,5],[1,3,4],[2,6]]
 
     struct ListNode **test_data = mock_data(datasets_01, rows, cols);
     print_dataset((const struct ListNode **)test_data, rows);
