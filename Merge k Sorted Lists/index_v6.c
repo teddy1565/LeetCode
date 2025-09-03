@@ -7,6 +7,7 @@
  * 
  * @copyright Copyright (c) 2025
  * 
+ * I guess when pointer iterator, performance is very slow
  */
 #include "index.h"
 
