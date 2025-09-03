@@ -65,8 +65,8 @@ void print_dataset(const struct ListNode **lists, int listsSize) {
 }
 
 int compare_cb(const void *a, const void *b) {
-    printf("%d ", (*(struct ListNode *)a).val);
-    return ((struct ListNode *)a)->val - ((struct ListNode *)b)->val;
+    // printf("%d ", (*(struct ListNode **)a)->val);
+    return (*(struct ListNode **)a)->val - (*(struct ListNode **)b)->val;
 }
 
 struct ListNode* mergeKLists(struct ListNode** lists, int listsSize) {
@@ -100,6 +100,8 @@ struct ListNode* mergeKLists(struct ListNode** lists, int listsSize) {
     
     if (listsSize == 1) {
         return head_p;
+    } else if (head_p == NULL) {
+        return NULL;
     }
 
     p = head_p;
@@ -113,16 +115,17 @@ struct ListNode* mergeKLists(struct ListNode** lists, int listsSize) {
 
     struct ListNode **list_copy = (struct ListNode **) malloc(sizeof(struct ListNode*) * length_count);
     for (int i = 0; i < length_count; i++) {
-        (*list_copy)[i] = *p;
+        (list_copy)[i] = p;
         p = p->next;
     }
 
     qsort(list_copy, length_count, sizeof(struct ListNode *), &compare_cb);
 
     for (int i = 0; i < length_count-1; i++) {
-        printf("%d ", list_copy[i]->val);
+        list_copy[i]->next = list_copy[i+1];
     }
-    return NULL;
+    list_copy[length_count - 1]->next = NULL;
+    return list_copy[0];
 }
 
 
