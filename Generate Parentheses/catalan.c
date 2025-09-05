@@ -53,8 +53,11 @@ int main() {
 
     if (n >= 0) {
         // long long total_rows = calculateCatalan(n);
-        long long total_rows = calculateCatalanEfficient(n);
-        printf("n = %d, rows = %lld\n", n, total_rows);
+        long long total_rows_a = calculateCatalanEfficient(n);
+        printf("[calculateCatalanEfficient]: n = %d, rows = %lld\n", n, total_rows_a);
+
+        long long total_rows_b = calculateCatalan(n);
+        printf("[calculateCatalan]n = %d, rows = %lld\n", n, total_rows_b);
     } else {
         printf("Not avaliable\n");
     }
