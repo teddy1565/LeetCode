@@ -1,63 +1,107 @@
+/**
+ * @file index_v6.c
+ * @author JING TING XIONG (teddy1565@gmail.com)
+ * @brief 
+ * @version 0.1
+ * @date 2025-09-10
+ * 
+ * @copyright Copyright (c) 2025
+ * 
+ */
 #include "index.h"
 
 
 int divide(int dividend, int divisor) {
-    int is_negative = 0;
-    if (dividend < 0 && divisor < 0) {
-        is_negative = 0;
-    } else if (dividend > 0 && divisor > 0) {
-        is_negative = 0;
-    } else if (dividend < 0 || divisor < 0) {
-        is_negative = 1;
+
+    if (dividend == INT_MIN && divisor == -1) {
+        return INT_MAX;
+    } else if (dividend == INT_MIN && divisor == 1) {
+        return INT_MIN;
+    } else if (dividend == INT_MIN && divisor == INT_MIN) {
+        return 1;
+    } else if (divisor == INT_MIN) {
+        return 0;
+    } else if (divisor == 2) {
+        return (dividend >> 1);
+    } else if (divisor == -2) {
+        return -(dividend >> 1);
+    } else if (dividend == INT_MIN) {
+        if (divisor < -1073741824) {
+            return 1;
+        } else if (divisor < -715827882) {
+            return 2;
+        } else if (divisor > 1073741824) {
+            return -1;
+        } else if (divisor > 715827882) {
+            return -2;
+        }
+    } else if (dividend >= 0 && divisor > 0 && dividend < divisor) {
+        return 0;
+    } else if (dividend < 0 && divisor < 0 && dividend > divisor) {
+        return 0;
+    } else if (dividend == 0) {
+        return 0;
+    } else if (divisor == 1) {
+        return dividend;
+    } else if (divisor == -1) {
+        return -dividend;
+    } else if (dividend == divisor) {
+        return 1;
+    } else if ((dividend != -2147483648 && -dividend == divisor) || (divisor != -2147483648 && dividend == -divisor)) {
+        return -1;
+    } else if (abs(dividend) < abs(divisor)) {
+        return 0;
+    }
+
+    int overflow = 0;
+    for (int i = 0; i < 30; i++) {
+        if ((2 << i) == divisor || divisor == INT_MAX) {
+            overflow = 1;
+            break;
+        }
+    }
+    if (dividend == -2147483648) {
+        if (divisor < 0) {
+            overflow = 1;
+        }
+        dividend = -2147483647;
     }
 
     int a = abs(dividend);
-    int b = abs(divisor);
+    long long int b = abs(divisor);
+    int m = 0;
+    int answer = 0;
 
-    if (a < b) {
-        return 0;
-    } else if (a == b && is_negative == 0) {
-        return 1;
-    } else if (a == b && is_negative == 1) {
-        return -1;
-    } else if (b == 1 && is_negative == 1) {
-        return -a;
-    } else if (b == 1 && is_negative == 0) {
-        return a;
-    }
-    int n = 0;
-    int c = 0;
-    while (a > 0) {
-        while((b << c) < a) {
-            if ((b << c) < (b << c - 1)) {
-                break;
-            }
-            c++;
-        }
-        if (c == 0) {
+
+    for (int c = 0; c < 31 && (((b << c) & INT_MIN) == 0); c++) {
+        if ((int)(b << c) > a) {
             break;
         }
-        int k = 1;
-        for (int i = 1; i <= (c - 1); i++) {
-            for (int j = 0; j < i; j++) {
-                k *= b;
+        m = c;
+    }
+
+    while (a-b >= 0) {
+        for (int c = m; c >= 0 && a > 0; c--) {
+            if ((a - (b << c)) >= 0) {
+                answer += (1 << c);
+            } else if ((a - (b << c)) < 0) {
+                continue;
             }
+            a = a - (b << c);
         }
-        printf("\t\tc: %d\n", c);
-        printf("\tk: %d\n", k);
-        a = (a - (b << (c - 1)));
-        c = 0;
     }
     
-        printf("\t%d\n", n);
-    return n;
+    if ((dividend < 0 && divisor > 0) || (dividend > 0 && divisor < 0)) {
+        return (-answer) ^ overflow;
+    }
+    return answer;
 }
 
 int main(void) {
-    printf("%d\n", divide(60, 60));
-    printf("%d\n", divide(2147483647, 1));
-    printf("%d\n", divide(2147483647, 2));
-    // printf("%d\n", divide(2147483647, -1));
-    // printf("%d\n", divide(2147483647, -2147483648));
+    printf("%d\n", divide(10000, 3));
+    printf("%d\n", divide(7, -3));
+    printf("%d\n", divide(2147483647, 3));
+    printf("%d\n", divide(2147483647, 2147483646));
+    // printf("%d\n", divide(2147483647, 2));
     return 0;
 }
