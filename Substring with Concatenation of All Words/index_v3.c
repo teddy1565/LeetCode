@@ -23,6 +23,7 @@ int* findSubstring(char* s, char** words, int wordsSize, int* returnSize) {
     int input_str_size = strlen(s);
 
     int list_length = (input_str_size / words_str_size);
+    int total = 0;
     printf("word_str_size: %d\n", words_str_size);
     printf("input_str_size: %d\n", input_str_size);
     printf("list_length: %d\n", list_length);
@@ -30,14 +31,20 @@ int* findSubstring(char* s, char** words, int wordsSize, int* returnSize) {
     int *list = malloc(sizeof(int) * list_length);
 
     for (int i = 0; i < list_length; i++) {
-        list[i] = -1;
+        list[i] = 0;   
     }
+
+    for (int i = 0; i < wordsSize; i++) {
+        total += (i + 1);
+    }
+
+    printf("total: %d\n", total);
 
     for (int i = 0; i < wordsSize; i++) {
         for (int j = 0; j < input_str_size; j += words_str_size) {
             for (int k = 0; k < words_str_size; k++) {
                 if (s[j + k] == words[i][k]) {
-                    list[j / words_str_size] = i;
+                    list[j / words_str_size] = i + 1;
                 }
             }
         }
