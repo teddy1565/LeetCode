@@ -7,6 +7,11 @@
  * 
  * @copyright Copyright (c) 2025
  * 
+ * @todo
+ * maybe has 2 bug
+ * 
+ * 1. same words [word, good, best, good]
+ * 2. list[i] = n
  */
 #include "index.h"
 
