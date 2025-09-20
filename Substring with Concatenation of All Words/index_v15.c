@@ -45,11 +45,6 @@ int* findSubstring(char* s, char** words, int wordsSize, int* returnSize) {
     }
 
     const int word_str_total_length = words_str_size * wordsSize;
-    
-    printf("word_total: %lld\n", word_total);
-    printf("word_str_total_length: %d\n", word_str_total_length);
-
-    printf("---------------------------------\n\n");
 
     for (int i = 0; i <= (input_str_size - words_str_size); i++) {
 
@@ -86,7 +81,6 @@ int* findSubstring(char* s, char** words, int wordsSize, int* returnSize) {
         if (tmp_answer_total == word_total) {
             answer[(*returnSize)++] = i;
         }
-        printf("%d | %lld | %lld\n", i, tmp_answer[i], tmp_answer_total);
     }
 
     free(word_head_list);
