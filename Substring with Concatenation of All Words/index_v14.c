@@ -79,10 +79,10 @@ int* findSubstring(char* s, char** words, int wordsSize, int* returnSize) {
             continue;
         }
         long long int tmp_answer_total = 0;
-        for (int j = i, k = 0; j < input_str_size && k < wordsSize; j++) {
-            if (tmp_answer[j] == 0) {
-                continue;
-            }
+        for (int j = i, k = 0; j < input_str_size && k < wordsSize; j += words_str_size) {
+            // if (tmp_answer[j] == 0) {
+            //     continue;
+            // }
             tmp_answer_total += tmp_answer[j];
             k++;
         }
