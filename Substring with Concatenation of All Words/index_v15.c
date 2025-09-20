@@ -27,10 +27,10 @@ int* findSubstring(char* s, char** words, int wordsSize, int* returnSize) {
 
     int *answer = (int *) malloc(sizeof(int) * input_str_size);
     int *word_head_list = (int *) malloc(sizeof(int) * 26);
-    long long int *tmp_answer = (long long int *) malloc(sizeof(long long int) * input_str_size);
+    long long int *tmp_answer = (long long int *) malloc(sizeof(long long int) * (input_str_size + 1));
 
     memset(answer, 0, sizeof(int) * input_str_size);
-    memset(tmp_answer, 0, sizeof(long long int) * input_str_size);
+    memset(tmp_answer, 0, sizeof(long long int) * (input_str_size + 1));
 
 
     memset(word_head_list, 0, sizeof(int) * 26);
@@ -80,9 +80,6 @@ int* findSubstring(char* s, char** words, int wordsSize, int* returnSize) {
         }
         long long int tmp_answer_total = 0;
         for (int j = i, k = 0; j < input_str_size && k < wordsSize; j += words_str_size) {
-            // if (tmp_answer[j] == 0) {
-            //     continue;
-            // }
             tmp_answer_total += tmp_answer[j];
             k++;
         }
