@@ -1,5 +1,5 @@
 /**
- * @file index_v1.c
+ * @file index_v2.c
  * @author JING TING XIONG (teddy1565@gmail.com)
  * @brief 
  * @version 0.1
@@ -11,7 +11,11 @@
 
 #include "index.h"
 
+
 // ()(()
+// )))()())
+// ())(())(
+// (()())(()()())
 int longestValidParentheses(char* s) {
     int max_count = 0;
 
@@ -19,20 +23,27 @@ int longestValidParentheses(char* s) {
     int valid_bracket_counter = 0;
     
     int tmp_bracket_counter = 0;
-    
+    bool need_close = false;
     char c = '\0';
     while (c = *(s++)) {
 
-        if (c == '(') {
+        if (c == '(' && need_close == false) {
             bracket_counter++;
+        } else if (c == '(' && need_close == true) {
+            need_close = false;
+            bracket_counter = 1;
+            valid_bracket_counter = 0;
         } else if (c == ')') {
+            need_close = true;
             bracket_counter--;
             if (bracket_counter >= 0) {
                 valid_bracket_counter++;
             }
+
             if (bracket_counter == 0) {
                 valid_bracket_counter += tmp_bracket_counter;
                 tmp_bracket_counter = 0;
+                need_close = false;
             }
         }
 
