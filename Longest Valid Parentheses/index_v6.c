@@ -30,17 +30,35 @@ int longestValidParentheses(char* s) {
     int b = 1;
     int *length_list = (int *) malloc(sizeof(int) * (str_length + 1));
     memset(length_list, 0, sizeof(int) * (str_length + 1));
+
+    int stack_size = 0;
+    
+    int temp = 0;
     
     while (s[a] != '\0' && s[b] != '\0') {
+        printf("%d %d %d\n", a, b, stack_size);
         if (s[a] == '(' && s[b] == ')') {
-            a += 2;
-            b += 2;
+            if (stack_size == 0) {
+                b += 2;
+                a = b - 1;
+            } else if (stack_size > 0) {
+                stack_size--;
+                a-=1;
+                b+=1;
+            }
         } else if (s[a] == '(' && s[b] == '(') {
-            a++;
+            
             b++;
+            a = b - 1;
+            stack_size++;
+        } else if (s[a] == ')') {
+            
+            b++;
+            a = b - 1;
         }
     }
     
+    return 0;
 }
 
 int main(void) {
