@@ -68,7 +68,7 @@ int longestValidParentheses(char* s) {
                     temp_length++;
                     real_temp += temp_length;
                     temp_length = 0;
-                } else if (s[i] == '(' && s[b] == ')' && s[i - 2] == '(' && s[b - 2] == ')') {
+                } else if (i - 2 > 0 && s[i] == '(' && s[b] == ')' && s[i - 2] == '(' && s[b - 2] == ')') {
                     real_temp += temp_length;
                     temp_length = 0;
                 } else if (a != i && stack_size != 0) {
@@ -126,6 +126,7 @@ int main(void) {
      * 13, 14
      */
     assert(longestValidParentheses("((((())))))((((((()))))))") == 14);
+    assert(longestValidParentheses("(()") == 2);
     assert(longestValidParentheses("((((()))))((((((((()))))))))") == 28);
     assert(longestValidParentheses("))))))))))()()()((((((((((") == 6);
     assert(longestValidParentheses("(((((((((()()()))))))))))") == 24);
@@ -139,5 +140,6 @@ int main(void) {
     assert(longestValidParentheses(")(((((()())()()))()(()))(") == 22);
     assert(longestValidParentheses("()(()") == 2);
     assert(longestValidParentheses("(()(((()") == 2);
+    assert(longestValidParentheses("()(()(((") == 2);
     return 0;
 }
