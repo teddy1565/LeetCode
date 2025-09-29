@@ -141,5 +141,11 @@ int main(void) {
     assert(longestValidParentheses("()(()") == 2);
     assert(longestValidParentheses("(()(((()") == 2);
     assert(longestValidParentheses("()(()(((") == 2);
+    assert(longestValidParentheses("(((())))((()()())") == 8);
+    assert(longestValidParentheses("(()((())()))") == 12);
+    assert(longestValidParentheses("(()())(()()())") == 14);
+    assert(longestValidParentheses("())(())(") == 4);
+    assert(longestValidParentheses(")))()())") == 4);
+    assert(longestValidParentheses("()())(()()()())(()))") == 14);
     return 0;
 }
