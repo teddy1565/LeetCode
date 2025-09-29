@@ -68,6 +68,9 @@ int longestValidParentheses(char* s) {
                     temp_length++;
                     real_temp += temp_length;
                     temp_length = 0;
+                } else if (s[i] == '(' && s[b] == ')' && s[i - 2] == '(' && s[b - 2] == ')') {
+                    real_temp += temp_length;
+                    temp_length = 0;
                 } else if (a != i && stack_size != 0) {
                     
                     if (real_temp > max) {
