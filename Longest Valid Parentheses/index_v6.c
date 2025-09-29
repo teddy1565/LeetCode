@@ -15,6 +15,7 @@
 // )))()())
 // ())(())(
 // (()())(()()())
+// ((()))(()())
 int longestValidParentheses(char* s) {
 
     int str_length = strlen(s);
