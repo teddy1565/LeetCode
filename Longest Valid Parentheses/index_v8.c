@@ -47,8 +47,9 @@ int longestValidParentheses(char* s) {
                 real_temp += temp_length;
                 temp_length = 0;
             } else if (s[b + 1] == '(') {
-                i += 2;
                 b += 2;
+                // i += 2;
+                i = b - 1;
             } else if (s[b + 1] == ')') {
                 b++;
                 i--;
@@ -66,6 +67,7 @@ int longestValidParentheses(char* s) {
                     temp_length = 0;
                 } else {
                     real_temp = temp_length;
+                    temp_length = 0;
                 }
                 break;
             }
@@ -84,8 +86,9 @@ int longestValidParentheses(char* s) {
         }
     }
 
-    
-
+    if (temp_length != 0 && real_temp == 0) {
+        real_temp = temp_length;
+    }
     if (real_temp > max) {
         max = real_temp;
     }
@@ -95,6 +98,16 @@ int longestValidParentheses(char* s) {
 }
 
 int main(void) {
-    longestValidParentheses("(((())))((()()())");
+    // longestValidParentheses("(((())))((()()())");
+
+    /**
+     * @brief 
+     * 6, 7
+     * 8, 9
+     * 5, 10
+     * 11, 12
+     * 13, 14
+     */
+    longestValidParentheses(")(((((()())()()))()(()))(");
     return 0;
 }
