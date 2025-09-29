@@ -122,6 +122,19 @@ int main(void) {
      * 11, 12
      * 13, 14
      */
-    longestValidParentheses(")(((((()())()()))()(()))(");
+    assert(longestValidParentheses("((((())))))((((((()))))))") == 14);
+    assert(longestValidParentheses("((((()))))((((((((()))))))))") == 28);
+    assert(longestValidParentheses("))))))))))()()()((((((((((") == 6);
+    assert(longestValidParentheses("(((((((((()()()))))))))))") == 24);
+    assert(longestValidParentheses("((()))()))))))))))") == 8);
+    assert(longestValidParentheses("()()((((((((((") == 4);
+    assert(longestValidParentheses("((((()))))))") == 10);
+    assert(longestValidParentheses("((((((((((()()") == 4);
+    assert(longestValidParentheses("(((((((((((((((((()))))))))))))))))))") == 36);
+    assert(longestValidParentheses("(()") == 2);
+    assert(longestValidParentheses(")()())") == 4);
+    assert(longestValidParentheses(")(((((()())()()))()(()))(") == 22);
+    assert(longestValidParentheses("()(()") == 2);
+    assert(longestValidParentheses("(()(((()") == 2);
     return 0;
 }
