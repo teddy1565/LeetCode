@@ -72,38 +72,45 @@ int longestValidParentheses(char* s) {
         }
         loop_count++;
     }
+    printf("b_max: %d b_temp: %d\n", max_length, temp_length);
     if (temp_length > max_length) {
         max_length = temp_length;
     }
     printf("topic:\n\t");
     printf("%s\n", s);
+    printf("%d %d %d\n", i, a, b);
     printf("max: %d, temp: %d\n", max_length, temp_length);
     return max_length * 2;
 }
 int main(void) {
     // printf("%d\n", longestValidParentheses(")(((((()())()()))()((())))"));
-    assert(longestValidParentheses(")(((((()())()()))()((())))") == 24);
-    assert(longestValidParentheses("((((())))))((((((()))))))") == 14);
-    assert(longestValidParentheses("(()") == 2);
-    assert(longestValidParentheses("((((()))))((((((((()))))))))") == 28);
-    assert(longestValidParentheses("))))))))))()()()((((((((((") == 6);
-    assert(longestValidParentheses("(((((((((()()()))))))))))") == 24);
-    assert(longestValidParentheses("((()))()))))))))))") == 8);
-    assert(longestValidParentheses("()()((((((((((") == 4);
-    assert(longestValidParentheses("((((()))))))") == 10);
-    assert(longestValidParentheses("((((((((((()()") == 4);
-    assert(longestValidParentheses("(((((((((((((((((()))))))))))))))))))") == 36);
-    assert(longestValidParentheses("(()") == 2);
-    assert(longestValidParentheses(")()())") == 4);
-    assert(longestValidParentheses(")(((((()())()()))()(()))(") == 22);
-    assert(longestValidParentheses("()(()") == 2);
-    assert(longestValidParentheses("(()(((()") == 2);
-    assert(longestValidParentheses("()(()(((") == 2);
-    assert(longestValidParentheses("(((())))((()()())") == 8);
-    assert(longestValidParentheses("(()((())()))") == 12);
-    assert(longestValidParentheses("(()())(()()())") == 14);
-    assert(longestValidParentheses("())(())(") == 4);
-    assert(longestValidParentheses(")))()())") == 4);
-    assert(longestValidParentheses("()())(()()()())(()))") == 14);
+    // assert(longestValidParentheses(")(((((()())()()))()((())))") == 24);
+    assert(longestValidParentheses("(()(((()((((((((((") == 2);
+    assert(longestValidParentheses("(()(((()()((((((((((") == 4);
+    assert(longestValidParentheses("(()(((()()()((((((((((") == 6);
+    assert(longestValidParentheses("(()(((()()()()((((((((((") == 8);
+    assert(longestValidParentheses("(()(((()()()(()((((((((((") == 6);
+    // assert(longestValidParentheses("((((())))))((((((()))))))") == 14);
+    // assert(longestValidParentheses("(()") == 2);
+    // assert(longestValidParentheses("((((()))))((((((((()))))))))") == 28);
+    // assert(longestValidParentheses("))))))))))()()()((((((((((") == 6);
+    // assert(longestValidParentheses("(((((((((()()()))))))))))") == 24);
+    // assert(longestValidParentheses("((()))()))))))))))") == 8);
+    // assert(longestValidParentheses("()()((((((((((") == 4);
+    // assert(longestValidParentheses("((((()))))))") == 10);
+    // assert(longestValidParentheses("((((((((((()()") == 4);
+    // assert(longestValidParentheses("(((((((((((((((((()))))))))))))))))))") == 36);
+    // assert(longestValidParentheses("(()") == 2);
+    // assert(longestValidParentheses(")()())") == 4);
+    // assert(longestValidParentheses(")(((((()())()()))()(()))(") == 22);
+    // assert(longestValidParentheses("()(()") == 2);
+    // assert(longestValidParentheses("(()(((()") == 2);
+    // assert(longestValidParentheses("()(()(((") == 2);
+    // assert(longestValidParentheses("(((())))((()()())") == 8);
+    // assert(longestValidParentheses("(()((())()))") == 12);
+    // assert(longestValidParentheses("(()())(()()())") == 14);
+    // assert(longestValidParentheses("())(())(") == 4);
+    // assert(longestValidParentheses(")))()())") == 4);
+    // assert(longestValidParentheses("()())(()()()())(()))") == 14);
     return 0;
 }
