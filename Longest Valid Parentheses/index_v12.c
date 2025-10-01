@@ -12,11 +12,18 @@ int longestValidParentheses(char* s) {
     }
 
     int temp_length = 0;
+    int max_length = 0;
     // )((()())(()))
     int i = 0, a = 1, b = 2;
+    printf("=======================\n");
     while (b < str_length) {
+        printf("%d %d %d\n", i, a, b);
         if (s[i] == ')') {
             i++; a++; b++;
+            if (temp_length > max_length) {
+                max_length = temp_length;
+            }
+            temp_length = 0;
         } else if (s[b] == '(') {
             if (s[b + 1] == ')') {
                 b += 2;
@@ -36,6 +43,7 @@ int longestValidParentheses(char* s) {
                 if (s[a] == ')' && s[i] == '(') {
                     a++; b++;
                     i = a - 1;
+                    temp_length++;
                 }
             } else if (s[a] == '(') {
                 a--;
@@ -49,7 +57,7 @@ int longestValidParentheses(char* s) {
             }
         }
     }
-    printf("%d\n", temp_length);
+    printf("max: %d, temp: %d\n", max_length, temp_length);
     return temp_length * 2;
 }
 int main(void) {
