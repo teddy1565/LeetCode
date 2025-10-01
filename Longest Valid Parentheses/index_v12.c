@@ -49,6 +49,7 @@ int longestValidParentheses(char* s) {
             }
         }
     }
+    printf("%d\n", temp_length);
     return temp_length * 2;
 }
 int main(void) {
