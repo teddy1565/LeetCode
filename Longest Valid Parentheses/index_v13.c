@@ -7,8 +7,6 @@
  * 
  * @copyright Copyright (c) 2025
  * 
- * stack implements
- * 
  */
 #include "index.h"
 int longestValidParentheses(char* s) {
@@ -25,6 +23,7 @@ int longestValidParentheses(char* s) {
 
     int temp_length = 0;
     int max_length = 0;
+    // )((()())(()))
 
     int *stack_list = (int *) malloc(sizeof(int) * (str_length + 1));
     memset(stack_list, 0, sizeof(int) * (str_length + 1));
@@ -38,19 +37,25 @@ int longestValidParentheses(char* s) {
             continue;
         } else if (s[i] == '(') {
             stack_list[stack_index++] = i;
+            printf("list: ");
+            for (int k = 0; k < stack_index; k++) {
+                printf("%d ", stack_list[k]);
+            }
+            printf("\n");
         } else if (s[i] == ')') {
+            printf("\tstate: ");
             int stack_list_index = --stack_index;
             int left_bracket_index = stack_list[stack_list_index - 1];
             
             int current_size = (i - left_bracket_index);
+            printf("%d %d %d %d %d %d\n", i, left_bracket_index, stack_list[stack_list_index], stack_list_index, current_size, max_length);
             stack_list[stack_list_index] = 0;
             if (current_size > max_length) {
                 max_length = current_size;
             }
         }
+        printf("\n");
     }
-
-    free(stack_list);
 
     return max_length;
 }
