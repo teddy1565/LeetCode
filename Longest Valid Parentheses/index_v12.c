@@ -1,3 +1,13 @@
+/**
+ * @file index_v12.c
+ * @author JING TING XIONG (teddy1565@gmail.com)
+ * @brief 
+ * @version 0.1
+ * @date 2025-10-02
+ * 
+ * @copyright Copyright (c) 2025
+ * 
+ */
 #include "index.h"
 int longestValidParentheses(char* s) {
     int str_length = strlen(s);
@@ -46,6 +56,39 @@ int longestValidParentheses(char* s) {
                         temp_length++;
                     }
                     a = b - 1;
+                } else if (a == i) {
+                    a = b - 1;
+                    if (s[a] == ')' && s[i] == '(') {
+                        temp_length += 1;
+                        b += 2;
+                        a += 2;
+                        i = a - 1;
+                    } else if (s[a] == '(' && s[i] == '(') {
+                        int stack_size = 1;
+                        int c = a + 1;
+                        while (stack_size >= 0 && c < str_length) {
+                            if (s[c] == '(') {
+                                stack_size++;
+                            } else if (s[c] == ')') {
+                                stack_size--;
+                            }
+                            c++;
+                            if (stack_size == -1) {
+                                break;
+                            }
+                        }
+                        if (stack_size == -1) {
+                            temp_length += 1;
+                        } else {
+                            if (temp_length > max_length) {
+                                max_length = temp_length;
+                            }
+                            temp_length = 0;
+                        }
+                        i = a;
+                        a += 1;
+                        b += 1;
+                    }
                 } else {
                     a += 1;
                 }
