@@ -89,7 +89,6 @@ int maximumMinutes(int** grid, int gridSize, int* gridColSize) {
                     esc_success_signal = 1;
                     user_timer++;
                     user_timer_stop_signal = 1;
-                    break;
                 }
                 
                 grid[x][y] = 3;
