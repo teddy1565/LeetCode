@@ -35,6 +35,9 @@ int maximumMinutes(int** grid, int gridSize, int* gridColSize) {
             }
         }
     }
+    if (fire_queue_index == 0) {
+        return ESC_MAX;
+    }
 
     int offset_user_queue_index = 0;
     int fire_timer = 0;
