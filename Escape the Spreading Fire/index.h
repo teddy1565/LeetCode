@@ -10,5 +10,7 @@
 #define GRASS 0
 #define FIRE 1
 #define WALL 2
+#define USER 3
+#define ESC_DOOR 4
 
 int maximumMinutes(int** grid, int gridSize, int* gridColSize);
