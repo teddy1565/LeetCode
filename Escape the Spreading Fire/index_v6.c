@@ -130,7 +130,7 @@ int escape_loop(int** grid_root, int row_size, int col_size, int delay_t) {
             }
         }
         
-        if (fire_queue_index != 0 && fire_queue_index == update_fire_queue_index) {
+        if (fire_queue_index == update_fire_queue_index && fire_queue_index != 0) {
             answer = ESC_MAX;
             goto release_resource;
         }
