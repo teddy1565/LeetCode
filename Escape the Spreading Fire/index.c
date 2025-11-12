@@ -255,11 +255,8 @@ int maximumMinutes(int** grid, int gridSize, int* gridColSize) {
     int lo = 0, hi = ESC_MAX, ans = ESC_MIN;
 
     escape_fire_loop(grid, row_size, col_size, fire_grid);
-    printf("fire_grid_done\n");
     escape_user_loop(grid, row_size, col_size, user_grid);
-    printf("user_grid_done\n");
 
-    printf("%d %d\n", fire_grid[row_size-1][col_size-1], user_grid[row_size-1][col_size-1]);
 
     if (fire_grid[row_size-1][col_size-1] == ESC_MAX && user_grid[row_size-1][col_size-1] != 0) {
         ans = ESC_MAX;
@@ -272,7 +269,6 @@ int maximumMinutes(int** grid, int gridSize, int* gridColSize) {
     
     hi = fire_grid[row_size-1][col_size-1];
 
-    printf("hi: %d, lo: %d\n", hi, lo);
 
     if ((fire_grid[row_size-1][col_size-1] - user_grid[row_size-1][col_size-1]) - 1 >= 0) {
         int fast_check = can_escape(grid_copy, row_size, col_size, (fire_grid[row_size-1][col_size-1] - user_grid[row_size-1][col_size-1])-1, fire_grid, user_grid, user_queue);
@@ -295,16 +291,13 @@ int maximumMinutes(int** grid, int gridSize, int* gridColSize) {
         int mid = (lo + hi) / 2;
         last = can_escape(grid_copy, row_size, col_size, mid, fire_grid, user_grid, user_queue);
         if (last != ESC_MIN) {
-            // printf("can_escape: true, %d %d %d\n", last, mid, lo);
             ans = mid;
             lo = mid + 1;
         } else {
-            // printf("can_escape: false, %d %d %d\n", last, mid, hi);
             hi = mid - 1;
         }
     }
 
-    printf("%d %d %d %d\n", ans, last, hi, lo);
 
     release_and_response:
     
