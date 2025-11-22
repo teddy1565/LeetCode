@@ -503,10 +503,7 @@ void free_bst(struct BST *bst) {
     if (bst != NULL && bst->root_node != NULL) {
         bst->inner_delete_tree(bst, bst->root_node);
     }
-    if (bst->root_node != NULL) {
-        free(bst->root_node);
-        bst->root_node = NULL;
-    }
+    
     if (bst->nil_node != NULL) {
         free(bst->nil_node);
         bst->nil_node = NULL;
