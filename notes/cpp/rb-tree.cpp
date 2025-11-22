@@ -335,5 +335,10 @@ class BST {
 
 int main(void) {
     BST bst = BST();
+    bst.insert(1);
+    bst.insert(-1);
+    bst.insert(2);
+
+    bst.inorder();
     return 0;
 }
