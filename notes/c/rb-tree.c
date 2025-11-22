@@ -91,16 +91,39 @@ struct BST {
     void            (*inner_insert_case)          (struct BST *self, struct Node *node);
     void            (*inner_delete_tree)          (struct BST *self, struct Node *node);
 
-    void            (*inner_search)               (struct BST *self, struct Node *node, int key);
+    int *           (*inner_search)               (struct BST *self, struct Node *node, int key);
     void            (*inner_update)               (struct BST *self, struct Node *node, int key, int value);
 
     void            (*show_inorder)               (struct BST *self);
-    void            (*query)                      (struct BST *self, int key);
+    int *           (*query)                      (struct BST *self, int key);
     void            (*insert)                     (struct BST *self, int key, int value);
     void            (*update)                     (struct BST *self, int key, int value);
     void            (*delete)                     (struct BST *self, int key);
     
 } BST;
+
+
+int* bst_inner_search(struct BST *self, struct Node *node, int key) {
+
+    if (node == NULL) {
+        return NULL;
+    } else if (node->key == key) {
+        return &(node->value);
+    }
+
+    if (node->key > key) {
+        return self->inner_search(self, node->left_tree, key);
+    }
+
+    return self->inner_search(self, node->right_tree, key);
+}
+
+int* bst_outer_query(struct BST *self, int key) {
+    if (self->root_node == NULL) {
+        return NULL;
+    }
+    return self->inner_search(self, self->root_node, key);
+}
 
 void bst_inner_rorate_right(struct BST *self, struct Node *node) {
     struct Node *grand_parent = node->get_grand_parent(node);
@@ -249,7 +272,9 @@ void bst_inner_delete_case(struct BST *self, struct Node *node) {
 }
 
 void bst_inner_insert(struct BST *self, struct Node *node, int key, int value) {
-    if (node->key > key) {
+    if (node->key == key) {
+        node->value = value;
+    } else if (node->key > key) {
         if (node->left_tree != self->nil_node) {
             self->inner_insert(self, node->left_tree, key, value);
         } else {
@@ -260,8 +285,6 @@ void bst_inner_insert(struct BST *self, struct Node *node, int key, int value) {
             node->left_tree = tmp_node;
             self->inner_insert_case(self, tmp_node);
         }
-    } else if (node->key == key) {
-        node->value = value;
     } else {
         if (node->right_tree != self->nil_node) {
             self->inner_insert(self, node->right_tree, key, value);
@@ -463,10 +486,12 @@ struct BST* create_bst() {
     bst->inner_insert = bst_inner_insert;
     bst->inner_rotate_left = bst_inner_rorate_left;
     bst->inner_rotate_right = bst_inner_rorate_right;
+    bst->inner_search = bst_inner_search;
 
     bst->show_inorder = bst_outer_show_inorder;
     bst->inner_show_inorder = bst_inner_show_inorder;
     bst->insert = bst_outer_insert;
+    bst->query = bst_outer_query;
     return bst;
 }
 
@@ -493,6 +518,12 @@ int main(void) {
     bst->insert(bst, 101, 3);
     bst->insert(bst, 93, 3);
     bst->insert(bst, 88, 3);
+    
+    bst->show_inorder(bst);
+    int *n = bst->query(bst, 7);
+    if (n != NULL) {
+        printf("key: %d, val: %d\n", 7, (*n));
+    }
 
     free_bst(bst);
     return 0;
