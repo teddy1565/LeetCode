@@ -249,7 +249,6 @@ void bst_inner_delete_case(struct BST *self, struct Node *node) {
 }
 
 void bst_inner_insert(struct BST *self, struct Node *node, int key, int value) {
-    printf("%d\n", key);
     if (node->key > key) {
         if (node->left_tree != self->nil_node) {
             self->inner_insert(self, node->left_tree, key, value);
@@ -494,7 +493,6 @@ int main(void) {
     bst->insert(bst, 101, 3);
     bst->insert(bst, 93, 3);
     bst->insert(bst, 88, 3);
-    printf("done");
 
     free_bst(bst);
     return 0;
