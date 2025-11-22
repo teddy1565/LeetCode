@@ -127,6 +127,120 @@ void bst_inner_rorate_right(struct BST *self, struct Node *node) {
     }
 }
 
+void bst_inner_rorate_left(struct BST *self, struct Node *node) {
+    if (node->parent == NULL) {
+        self->root_node =  node;
+        return;
+    }
+
+    struct Node *grand_parent = node->get_grand_parent(node);
+    struct Node *parent = node->parent;
+    struct Node *y = node->left_tree;
+
+    parent->right_tree = y;
+
+    if (y != NULL) {
+        y->parent = parent;
+    }
+    node->left_tree = parent;
+    parent->parent = node;
+
+    if (self->root_node == parent) {
+        self->root_node = node;
+    }
+    node->parent = grand_parent;
+
+    if (grand_parent != NULL) {
+        if (grand_parent->left_tree == parent) {
+            grand_parent->left_tree = node;
+        } else {
+            grand_parent->right_tree = node;
+        }
+    }
+}
+
+struct Node* bst_inner_get_smallest_child(struct BST *self, struct Node *node) {
+    if (node->left_tree == NULL) {
+        return node;
+    }
+    return self->inner_get_smallest_child(self, node->left_tree);
+}
+
+void bst_inner_delete_case(struct BST *self, struct Node *node) {
+    if (node->parent == NULL) {
+        node->color = BLACK;
+        return;
+    }
+
+    if (node->get_sibling(node)->color == RED) {
+        node->parent->color = RED;
+        node->get_sibling(node)->color = BLACK;
+        if (node == node->parent->left_tree) {
+            self->inner_rotate_left(self, node->parent);
+        } else {
+            self->inner_rotate_right(self, node->parent);
+        }
+    }
+
+    if (    
+            node->parent->color == BLACK &&
+            node->get_sibling(node)->color == BLACK && 
+            node->get_sibling(node)->left_tree->color == BLACK &&
+            node->get_sibling(node)->right_tree->color == BLACK
+
+    ) {
+
+        node->get_sibling(node)->color = RED;
+        self->inner_delete_case(self, node->parent);
+    
+    } else if (
+                node->parent->color == RED &&
+                node->get_sibling(node)->color == BLACK &&
+                node->get_sibling(node)->left_tree->color == BLACK &&
+                node->get_sibling(node)->right_tree->color == BLACK
+    ) {
+
+        node->get_sibling(node)->color = RED;
+        node->parent->color = BLACK;
+
+    } else {
+        if (node->get_sibling(node)->color == BLACK) {
+            if (
+                node == node->parent->left_tree &&
+                node->get_sibling(node)->left_tree->color == RED &&
+                node->get_sibling(node)->right_tree->color == BLACK
+            )
+            {
+
+                node->get_sibling(node)->color = RED;
+                node->get_sibling(node)->left_tree->color = BLACK;
+                self->inner_rotate_left(self, node->get_sibling(node)->left_tree);
+
+            } else if (
+                        node == node->parent->right_tree &&
+                        node->get_sibling(node)->left_tree->color == BLACK &&
+                        node->get_sibling(node)->right_tree->color == RED
+            )
+            {
+                node->get_sibling(node)->color = RED;
+                node->get_sibling(node)->right_tree->color = BLACK;
+                self->inner_rotate_left(self, node->get_sibling(node)->right_tree);
+            }
+        }
+
+        node->get_sibling(node)->color = node->parent->color;
+        node->parent->color = BLACK;
+
+        if (node == node->parent->left_tree) {
+            node->get_sibling(node)->right_tree->color = BLACK;
+            self->inner_rotate_left(self, node->get_sibling(node));
+        } else {
+            node->get_sibling(node)->left_tree->color = BLACK;
+            self->inner_rotate_right(self, node->get_sibling(node));
+        }
+    } 
+}
+
 struct Node* bst_inner_insert(struct BST *self, struct Node *node, int key, int value) {
     if (node->key >= key) {
         if (node->left_tree != NULL) {
@@ -151,6 +265,57 @@ struct Node* bst_inner_insert(struct BST *self, struct Node *node, int key, int 
             self->inner_insert_case(self, tmp_node);
         }
     }
+}
+
+void bst_inner_insert_case(struct BST *self, struct Node *node) {
+    if (node->parent == NULL) {
+        self->root_node = node;
+        node->color = BLACK;
+        return;
+    }
+
+    if (node->parent->color == RED) {
+        if (node->get_uncle(node)->color == RED) {
+            node->parent->color = BLACK;
+            node->get_uncle(node)->color = BLACK;
+            node->get_grand_parent(node)->color = RED;
+            self->inner_insert_case(self, node->get_grand_parent(node));
+        } else {
+            if (node->parent->right_tree == node && node->get_grand_parent(node)->left_tree == node->parent) {
+                
+                self->inner_rotate_left(self, node);
+                node->color = BLACK;
+                node->parent->color = RED;
+                self->inner_rotate_right(self, node);
+
+            } else if (node->parent->left_tree == node && node->get_grand_parent(node)->right_tree == node->parent) {
+                
+                self->inner_rotate_right(self, node);
+                node->color = BLACK;
+                node->parent->color = RED;
+                self->inner_rotate_left(self, node);
+
+            } else if (node->parent->left_tree == node && node->get_grand_parent(node)->left_tree == node->parent) {
+                node->parent->color = BLACK;
+                node->get_grand_parent(node)->color = RED;
+                self->inner_rotate_right(self, node->parent);
+            } else if (node->parent->right_tree == node && node->get_grand_parent(node)->right_tree == node->parent) {
+                node->parent->color = BLACK;
+                node->get_grand_parent(node)->color = RED;
+                self->inner_rotate_left(self, node->parent);
+            }
+        }
+    }
+}
+
+void bst_inner_delete_tree(struct BST *self, struct Node *node) {
+    if (node == NULL) {
+        return;
+    }
+    self->inner_delete_tree(self, node->left_tree);
+    self->inner_delete_tree(self, node->right_tree);
+
+    free(node);
 }
 
 
