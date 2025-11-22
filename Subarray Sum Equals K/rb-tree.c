@@ -471,6 +471,15 @@ struct BST* create_bst() {
     return bst;
 }
 
+void free_bst(struct BST *bst) {
+    if (bst->root_node != NULL) {
+        bst->inner_delete_tree(bst, bst->root_node);
+    }
+    free(bst->root_node);
+    free(bst->nil_node);
+    free(bst);
+}
+
 int main(void) {
     struct BST* bst = create_bst();
     bst->insert(bst, 7, 1);
@@ -486,5 +495,7 @@ int main(void) {
     bst->insert(bst, 93, 3);
     bst->insert(bst, 88, 3);
     printf("done");
+
+    free_bst(bst);
     return 0;
 }
