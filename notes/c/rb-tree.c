@@ -354,6 +354,7 @@ void bst_inner_delete_tree(struct BST *self, struct Node *node) {
     self->inner_delete_tree(self, node->right_tree);
 
     free(node);
+    node = NULL;
 }
 
 void bst_inner_delete_one_child(struct BST *self, struct Node *node) {
@@ -364,6 +365,7 @@ void bst_inner_delete_one_child(struct BST *self, struct Node *node) {
 
     if (node->parent == NULL && node->left_tree == self->nil_node && node->right_tree == self->nil_node) {
         free(node);
+        node = NULL;
         self->root_node = NULL;
         return;
     }
@@ -373,6 +375,7 @@ void bst_inner_delete_one_child(struct BST *self, struct Node *node) {
         self->root_node = child;
         self->root_node->color = BLACK;
         free(node);
+        node = NULL;
         return;
     }
 
@@ -392,6 +395,7 @@ void bst_inner_delete_one_child(struct BST *self, struct Node *node) {
     }
 
     free(node);
+    node = NULL;
 }
 
 bool bst_inner_delete_child(struct BST* self, struct Node *node, int key) {
@@ -496,12 +500,22 @@ struct BST* create_bst() {
 }
 
 void free_bst(struct BST *bst) {
-    if (bst->root_node != NULL) {
+    if (bst != NULL && bst->root_node != NULL) {
         bst->inner_delete_tree(bst, bst->root_node);
     }
-    free(bst->root_node);
-    free(bst->nil_node);
-    free(bst);
+    if (bst->root_node != NULL) {
+        free(bst->root_node);
+        bst->root_node = NULL;
+    }
+    if (bst->nil_node != NULL) {
+        free(bst->nil_node);
+        bst->nil_node = NULL;
+    }
+
+    if (bst != NULL) {
+        free(bst);
+        bst = NULL;
+    }
 }
 
 int main(void) {
