@@ -81,7 +81,7 @@ struct BST {
 
     void            (*inner_rotate_right)         (struct BST *self, struct Node *node);
     void            (*inner_rotate_left)          (struct BST *self, struct Node *node);
-    void            (*inner_show_inorder)         (struct BST *self);
+    void            (*inner_show_inorder)         (struct BST *self, struct Node *node);
     struct Node*    (*inner_get_smallest_child)   (struct BST *self, struct Node *node);
     bool            (*inner_delete_child)         (struct BST *self, struct Node *node, int key);
     void            (*inner_delete_one_child)     (struct BST *self, struct Node *node);
@@ -241,7 +241,7 @@ void bst_inner_delete_case(struct BST *self, struct Node *node) {
     } 
 }
 
-struct Node* bst_inner_insert(struct BST *self, struct Node *node, int key, int value) {
+void bst_inner_insert(struct BST *self, struct Node *node, int key, int value) {
     if (node->key >= key) {
         if (node->left_tree != NULL) {
             self->inner_insert(self, node->left_tree, key, value);
@@ -318,7 +318,124 @@ void bst_inner_delete_tree(struct BST *self, struct Node *node) {
     free(node);
 }
 
+void bst_inner_delete_one_child(struct BST *self, struct Node *node) {
+    struct Node *child = node->left_tree;
+    if (node->left_tree == NULL) {
+        child = node->right_tree;
+    }
+    if (node->parent == NULL && node->left_tree == NULL && node->right_tree == NULL) {
+        free(node);
+        self->root_node = NULL;
+        return;
+    }
+    
+    if (node->parent == NULL) {
+        child->parent = NULL;
+        self->root_node = child;
+        self->root_node->color = BLACK;
+        free(node);
+        return;
+    }
+
+    if (node->parent->left_tree == node) {
+        node->parent->left_tree = child;
+    } else {
+        node->parent->right_tree = child;
+    }
+    child->parent = node->parent;
+
+    if (node->color == BLACK) {
+        if (child->color == RED) {
+            child->color = BLACK;
+        } else {
+            self->inner_delete_case(self, child);
+        }
+    }
+
+    free(node);
+}
+
+bool bst_inner_delete_child(struct BST* self, struct Node *node, int key) {
+    if (node->key > key) {
+        
+    } else if (node->key < key) {
+        if (node->right_tree == NULL) {
+            return false;
+        }
+        return self->inner_delete_child(self, node->right_tree, key);
+    } else if (node->key == key) {
+        if (node->right_tree == NULL) {
+            self->inner_delete_one_child(self, node);
+            return true;
+        }
+        struct Node *smallest = self->inner_get_smallest_child(self, node->right_tree);
+        node->key = node->key ^ smallest->key;
+        smallest->key = node->key ^ smallest->key;
+        node->key = node->key ^ smallest->key;
+
+        self->inner_delete_one_child(self, smallest);
+        return true;
+    } else {
+        return false;
+    }
+}
+
+void bst_inner_show_inorder(struct BST* self, struct Node *node) {
+    if (node == NULL) {
+        return;
+    }
+    if (node->left_tree != NULL) {
+        self->inner_show_inorder(self, node->left_tree);
+    }
+
+    printf("%d ", node->key);
+
+    if (node->right_tree != NULL) {
+        self->inner_show_inorder(self, node->right_tree);
+    }
+}
+
+void bst_outer_insert(struct BST* self, int key, int value) {
+    if (self->root_node == NULL) {
+        self->root_node = create_node(key, value);
+        self->root_node->color = BLACK;
+    } else {
+        self->inner_insert(self, self->root_node, key, value);
+    }
+}
+
+void bst_outer_show_inorder(struct BST* self) {
+    if (self->root_node == NULL) {
+        return;
+    }
+    self->inner_show_inorder(self, self->root_node);
+    printf("\n");
+}
+
+struct BST* create_bst() {
+    struct BST* bst = (struct BST *) malloc(sizeof(struct BST));
+    bst->root_node = NULL;
+    bst->nil_node = NULL;
+    bst->inner_delete_case = bst_inner_delete_case;
+    bst->inner_delete_child = bst_inner_delete_child;
+    bst->inner_delete_one_child = bst_inner_delete_one_child;
+    bst->inner_delete_tree = bst_inner_delete_tree;
+    bst->inner_get_smallest_child = bst_inner_get_smallest_child;
+    bst->inner_insert_case = bst_inner_insert_case;
+    bst->inner_insert = bst_inner_insert;
+    bst->inner_rotate_left = bst_inner_rorate_left;
+    bst->inner_rotate_right = bst_inner_rorate_right;
+
+    bst->show_inorder = bst_outer_show_inorder;
+    bst->inner_show_inorder = bst_inner_show_inorder;
+    bst->insert = bst_outer_insert;
+}
 
 int main(void) {
+    struct BST* bst = create_bst();
+    bst->insert(bst, 7, 1);
+    bst->insert(bst, 14, 2);
+    bst->insert(bst, -4, 3);
+    bst->show_inorder(bst);
     return 0;
 }
