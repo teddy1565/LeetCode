@@ -18,7 +18,7 @@ int compare(const void *a, const void *b) {
     int **nodeB = (int **)b;
     
     int w = ((*nodeA)[0] - (*nodeB)[0]);
-    int h = ((*nodeA)[1] - (*nodeB)[1]);
+    int h = ((*nodeB)[1] - (*nodeA)[1]);
 
     if (w == 0) {
         return h;
@@ -36,49 +36,25 @@ int maxEnvelopes(int** envelopes, int envelopesSize, int* envelopesColSize) {
     #endif
     int max = 0;
     int *dp = (int *) malloc(sizeof(int) * envelopesSize);
-    int prev_i = 0;
-    int prev_ii = 0;
-    int prev_iii = 0;
-    int prev_iiii = 0;
-    int prev_iiiii = 0;
-    int prev_iiiiii = 0;
-    int prev_iiiiiii = 0;
-    int prev_iiiiiiii = 0;
-    int prev_iiiiiiiii = 0;
-    int prev_iiiiiiiiii = 0;
-    int prev_iiiiiiiiiii = 0;
-    int prev_iiiiiiiiiiii = 0;
-    
+    memset(dp, 0, sizeof(int) * envelopesSize);
+    int dp_size = 0;
     for (int i = 0; i < envelopesSize; i++) {
-        dp[i] = 1;
-        for (int j = prev_iiiiiiiiiiii; j < i; j++) {
-            if (envelopes[i][0] > envelopes[j][0] && envelopes[i][1] > envelopes[j][1]) {
-                
-                if (dp[i] < (dp[j] + 1)) {
-                    dp[i] = dp[j] + 1;
-                    if (dp[j] > dp[prev_i]) {
-                        prev_iiiiiiiiiiii = prev_iiiiiiiiiii;
-                        prev_iiiiiiiiiii = prev_iiiiiiiiii;
-                        prev_iiiiiiiiii = prev_iiiiiiiii;
-                        prev_iiiiiiiii = prev_iiiiiiii;
-                        prev_iiiiiiii = prev_iiiiiii;
-                        prev_iiiiiii = prev_iiiiii;
-                        prev_iiiiii = prev_iiiii;
-                        prev_iiiii = prev_iiii;
-                        prev_iiii = prev_iii;
-                        prev_iii = prev_ii;
-                        prev_ii = prev_i;
-                        prev_i = j;
-                    }
-                    
-                }
-                
-            }
+        int left = 0, right = dp_size, target = envelopes[i][1];
+        while (left < right) {
+            int mid = left + (right - left) / 2;
+            if (dp[mid] < target) left = mid + 1;
+            else right = mid;
         }
-        max = max >= dp[i] ? max : dp[i];
+        if (right >= dp_size) {
+            dp[dp_size] = target;
+            dp_size += 1;
+        } else {
+            dp[right] = target;
+        }
+        
     }
     free(dp);
-    return max;
+    return dp_size;
 }
 
 int main(void) {
