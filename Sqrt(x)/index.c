@@ -1,0 +1,20 @@
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
+
+int mySqrt(int x) {
+    if (x < 2) {
+        return x;
+    }
+    int low = 2;
+    int high = 46340; // INT_MAX SQRT
+    while (low <= high) {
+        int mid = low + (high - low) / 2;
+        if (mid * mid <= x) {
+            low = mid + 1;
+        } else {
+            high = mid - 1;
+        }
+    }
+    return high;
+}
