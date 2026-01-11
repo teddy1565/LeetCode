@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>DP 買賣股票動畫演示</title>
+    <style>
+        body { font-family: 'Segoe UI', sans-serif; background: #f0f2f5; display: flex; flex-direction: column; align-items: center; padding: 20px; }
+        .container { background: white; padding: 30px; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); width: 800px; }
+        h1 { text-align: center; color: #333; }
+        
+        .chart-area { display: flex; justify-content: space-around; margin-top: 30px; align-items: flex-end; height: 200px; border-bottom: 2px solid #ddd; padding-bottom: 10px; }
+        .bar-group { display: flex; flex-direction: column; align-items: center; width: 60px; transition: all 0.5s; opacity: 0.3; }
+        .bar-group.active { opacity: 1; transform: scale(1.1); }
+        .bar { width: 40px; background: #3498db; border-radius: 5px 5px 0 0; display: flex; align-items: flex-end; justify-content: center; color: white; font-weight: bold; transition: height 0.5s; }
+        .price-label { margin-top: 10px; font-weight: bold; }
+
+        .dashboard { display: flex; justify-content: space-between; margin-top: 40px; gap: 20px; }
+        .card { flex: 1; padding: 20px; border-radius: 10px; color: white; position: relative; overflow: hidden; }
+        .card h3 { margin: 0 0 10px 0; font-size: 1.2rem; }
+        .card .value { font-size: 2.5rem; font-weight: bold; }
+        .card .calc { font-size: 0.9rem; margin-top: 10px; opacity: 0.9; min-height: 40px; }
+        
+        .cash-card { background: linear-gradient(135deg, #2ecc71, #27ae60); }
+        .hold-card { background: linear-gradient(135deg, #e74c3c, #c0392b); }
+        
+        .controls { margin-top: 30px; text-align: center; }
+        button { padding: 10px 25px; font-size: 1.2rem; cursor: pointer; background: #333; color: white; border: none; border-radius: 50px; }
+        button:hover { background: #555; }
+        button:disabled { background: #ccc; cursor: not-allowed; }
+
+        .arrow-up { color: #2ecc71; }
+        .arrow-down { color: #e74c3c; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>股票 DP 邏輯視覺化</h1>
+    <div style="text-align: center; margin-bottom: 20px;">股價走勢: [7, 1, 5, 3, 6, 4]</div>
+
+    <div class="chart-area" id="chart">
+        </div>
+
+    <div class="dashboard">
+        <div class="card cash-card">
+            <h3>😎 空手派 (dp[0])</h3>
+            <div class="value" id="dp0-val">0</div>
+            <div class="calc" id="dp0-calc">起始資金</div>
+        </div>
+        <div class="card hold-card">
+            <h3>🤠 持股派 (dp[1])</h3>
+            <div class="value" id="dp1-val">-999</div>
+            <div class="calc" id="dp1-calc">尚未開始</div>
+        </div>
+    </div>
+
+    <div class="controls">
+        <button onclick="nextStep()" id="btn-next">開始下一步 ▶</button>
+        <button onclick="reset()" style="background: #999; margin-left: 10px;">重置</button>
+    </div>
+</div>
+
+<script>
+    const prices = [7, 1, 5, 3, 6, 4];
+    let step = -1;
+    let dp0 = 0;
+    let dp1 = -Infinity; // 初始設為無限小
+
+    function initChart() {
+        const chart = document.getElementById('chart');
+        chart.innerHTML = '';
+        prices.forEach((p, i) => {
+            const group = document.createElement('div');
+            group.className = 'bar-group';
+            group.id = `day-${i}`;
+            group.innerHTML = `
+                <div class="bar" style="height: ${p * 20}px;">${p}</div>
+                <div class="price-label">Day ${i}</div>
+            `;
+            chart.appendChild(group);
+        });
+    }
+
+    function updateUI(idx) {
+        document.querySelectorAll('.bar-group').forEach(el => el.classList.remove('active'));
+        if(idx >= 0 && idx < prices.length) {
+            document.getElementById(`day-${idx}`).classList.add('active');
+        }
+    }
+
+    function nextStep() {
+        step++;
+        const btn = document.getElementById('btn-next');
+        
+        if (step >= prices.length) {
+            btn.innerText = "結束";
+            btn.disabled = true;
+            return;
+        }
+
+        const p = prices[step];
+        updateUI(step);
+
+        // Logic Calculation
+        let prevDp0 = dp0;
+        let prevDp1 = dp1;
+
+        // Day 0 initialization logic for display
+        if (step === 0) {
+            dp1 = -p;
+            document.getElementById('dp0-val').innerText = 0;
+            document.getElementById('dp0-calc').innerText = "維持 0";
+            
+            document.getElementById('dp1-val').innerText = dp1;
+            document.getElementById('dp1-calc').innerText = `買入成本: -${p}`;
+        } else {
+            // DP 核心邏輯
+            let sellProfit = prevDp1 + p;
+            let buyCost = prevDp0 - p;
+
+            // Update DP0 (空手派)
+            let newDp0 = Math.max(prevDp0, sellProfit);
+            let dp0Msg = "";
+            if (sellProfit > prevDp0) {
+                dp0Msg = `💰 賣出! (${prevDp1} + ${p} = ${sellProfit})`;
+            } else {
+                dp0Msg = `💤 休息 (保持 ${prevDp0})`;
+            }
+
+            // Update DP1 (持股派)
+            let newDp1 = Math.max(prevDp1, buyCost);
+            let dp1Msg = "";
+            if (buyCost > prevDp1) {
+                dp1Msg = `🛒 買入! (${prevDp0} - ${p} = ${buyCost})`;
+            } else {
+                dp1Msg = `✊ 續抱 (保持 ${prevDp1})`;
+            }
+
+            dp0 = newDp0;
+            dp1 = newDp1;
+
+            // Update DOM
+            document.getElementById('dp0-val').innerText = dp0;
+            document.getElementById('dp0-calc').innerText = dp0Msg;
+            
+            document.getElementById('dp1-val').innerText = dp1;
+            document.getElementById('dp1-calc').innerText = dp1Msg;
+        }
+    }
+
+    function reset() {
+        step = -1;
+        dp0 = 0;
+        dp1 = -Infinity;
+        document.getElementById('btn-next').disabled = false;
+        document.getElementById('btn-next').innerText = "開始下一步 ▶";
+        document.getElementById('dp0-val').innerText = 0;
+        document.getElementById('dp1-val').innerText = "-";
+        document.getElementById('dp0-calc').innerText = "起始";
+        document.getElementById('dp1-calc').innerText = "起始";
+        updateUI(-1);
+    }
+
+    initChart();
+</script>
+
+</body>
+</html>
