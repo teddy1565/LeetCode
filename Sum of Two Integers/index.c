@@ -5,12 +5,9 @@
 #include <limits.h>
 
 int getSum(int a, int b) {
-    if (a == 0 && b == 0) {
-        return 0;
-    }
 
     while (b != 0) {
-        unsigned int carry = (a & b) << 1;
+        unsigned int carry = ((unsigned int)(a & b)) << 1;
         a = a ^ b;
         b = carry;
     }
