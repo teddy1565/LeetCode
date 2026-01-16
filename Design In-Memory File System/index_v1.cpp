@@ -3,6 +3,7 @@
 #include <list>
 #include <string>
 #include <unordered_map>
+#include <map>
 
 
 
@@ -12,7 +13,7 @@ class FileSystem {
     private:
         struct FileNode {
             std::string path;
-            std::vector<std::string, FileNode *> childs;
+            std::map<std::string, FileNode *> childs;
 
             FileNode(std::string path) {
                 this->path = path;
