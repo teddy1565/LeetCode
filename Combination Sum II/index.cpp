@@ -37,7 +37,7 @@ class Solution {
 
             
             for (int i = start_position; i < candidates.size(); i++) {  // O (N)
-                if (i > start_position && candidates[i] == candidates[i - 1]) {
+                if (i > start_position && candidates[i] == candidates[i - 1] || candidates[i] > target) {
                     continue;
                 }
 
@@ -55,7 +55,7 @@ class Solution {
             std::sort(candidates.begin(), candidates.end());    // O(N log N)
 
             for (int i = 0; i < candidates.size(); i++) {   // O(N)
-                if (i > 0 && candidates[i] == candidates[i - 1]) {  // skip repeat
+                if (i > 0 && candidates[i] == candidates[i - 1] || candidates[i] > target) {  // skip repeat
                     continue;
                 }
 
