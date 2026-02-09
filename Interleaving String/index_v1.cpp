@@ -20,8 +20,12 @@ class Solution {
                 return false;
             }
 
-            for (int i = 0, j = 0; i < s1_size || j < s2_size;) {
+            std::vector<std::vector<int>> dp(s3_size, std::vector<int>(2, -1));
 
+
+            for (int i = 1; i < s3_size; i++) {
+                
             }
         }
 };
+
