@@ -55,11 +55,20 @@ class Solution {
             }
         };
         bool is_valid_subtree(TreeNode *root, int min, int max) {
+            if (root->val == 27) {
+                std::cout << min << " | " << max << std::endl;
+            }
             bool left_result = true;
             bool right_result = true;
             if (root->left != nullptr) {
                 if (root->left->val >= root->val || root->left->val >= max) {
                     return false;
+                }
+
+                if (root->left->right != nullptr) {
+                    if (root->left->right->val >= max) {
+                        return false;
+                    }
                 }
 
                 if (root->left->left != nullptr) {
@@ -74,6 +83,12 @@ class Solution {
             if (root->right != nullptr) {
                 if (root->right->val <= root->val || root->right->val <= min) {
                     return false;
+                }
+
+                if (root->right->left != nullptr) {
+                    if (root->right->left->val <= min) {
+                        return false;
+                    }
                 }
 
                 if (root->right->right != nullptr) {
