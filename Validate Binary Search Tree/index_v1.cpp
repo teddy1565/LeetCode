@@ -54,9 +54,41 @@ class Solution {
                 this->right = right;
             }
         };
+        bool is_valid_subtree(TreeNode *root, int min, int max) {
+            bool left_result = true;
+            bool right_result = true;
+            if (root->left != nullptr) {
+                if (root->left->val >= root->val || root->left->val >= max) {
+                    return false;
+                }
 
+                if (root->left->left != nullptr) {
+                    if (root->left->left->val >= max) {
+                        return false;
+                    }
+                }
+
+                left_result = is_valid_subtree(root->left, root->left->val, min);
+            }
+
+            if (root->right != nullptr) {
+                if (root->right->val <= root->val || root->right->val <= min) {
+                    return false;
+                }
+
+                if (root->right->right != nullptr) {
+                    if (root->right->right->val <= min) {
+                        return false;
+                    }
+                }
+                
+                right_result = is_valid_subtree(root->right, max, root->right->val);
+            }
+
+            return left_result && right_result;
+        }
     public:
         bool isValidBST(TreeNode* root) {
-            
+            return is_valid_subtree(root, root->val, root->val);
         }
 };
