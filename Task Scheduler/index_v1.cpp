@@ -74,28 +74,47 @@ class Solution {
             }
 
             const int keys_size = keys.size();
+            int total_tasks = 0;
+
+            for (int i = 0; i < keys_size; i++) {
+                std::cout << keys[i] << " | " << tasks_map[keys[i]] << ", " << executed_map[keys[i]] << std::endl;
+            }
+            std::cout << "-------------------------" << std::endl;
+            int idle_count = 0;
             while (executed_count > 0) {
+                bool is_idle = true;
                 for (int i = 0; i < keys_size; i++) {
-                    
-                    if (executed_map[keys[i]] == 0) {
-                        if (tasks_map[keys[i]] > 0) {
+                    if (tasks_map[keys[i]] > 0) {
+                        if (executed_map[keys[i]] == 0) {
                             executed_map[keys[i]] = n;
                             tasks_map[keys[i]] -= 1;
                             executed_count -= 1;
+                            is_idle = false;
+                            break;
+                        } else {
+                            executed_map[keys[i]] -= 1;
                         }
-                    } else {
-                        executed_map[keys[i]] -= 1;
-                        
                     }
                 }
+
+                for (int i = 0; i < keys_size; i++) {
+                    std::cout << keys[i] << " | " << tasks_map[keys[i]] << ", " << executed_map[keys[i]] << std::endl;
+                }
+                std::cout << "-------------------------" << std::endl;
+                
+                
                 tick_count += 1;
+                if (is_idle == true) {
+                    idle_count += 1;
+                }
             }
 
             for (int i = 0; i < keys_size; i++) {
                 std::cout << keys[i] << " | " << tasks_map[keys[i]] << ", " << executed_map[keys[i]] << std::endl;
             }
+            std::cout << "-------------------------" << std::endl;
             
-            
+            std::cout << "idle_count: " << idle_count << std::endl;
             
             return tick_count;
         }
