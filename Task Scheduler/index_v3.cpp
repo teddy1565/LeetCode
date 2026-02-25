@@ -89,50 +89,32 @@ class Solution {
             // get keys size
             const int keys_size = keys.size();
 
-            for (int i = 0; i < keys_size; i++) {
-                std::cout << keys[i] << " | " << tasks_map[keys[i]] << ", " << executed_map[keys[i]] << std::endl;
-            }
-            std::cout << "-------------------------" << std::endl;
-
-            // count idle times
-            int idle_count = 0;
+            
             while (executed_count > 0) {
-                bool is_idle = true;
-
+                // count idle times
+                int idle_count = 0;
                 for (int i = 0; i < keys_size; i++) {
                     if (tasks_map[keys[i]] > 0) {
                         if (executed_map[keys[i]] == 0) {
                             executed_map[keys[i]] = n;
-                            is_idle = false;
-                            break;
+                            executed_count -= 1;
+                            tick_count += 1;
                         } else {
                             executed_map[keys[i]] -= 1;
                             if (executed_map[keys[i]] == 0) {
-                                executed_count -= 1;
                                 tasks_map[keys[i]] -= 1;
                             }
+                            idle_count += 1;
                         }
+                    } else {
+                        idle_count += 1;
                     }
                 }
 
-                for (int i = 0; i < keys_size; i++) {
-                    std::cout << keys[i] << " | " << tasks_map[keys[i]] << ", " << executed_map[keys[i]] << std::endl;
-                }
-                std::cout << "-------------------------" << std::endl;
-                
-                
-                tick_count += 1;
-                if (is_idle == false) {
-                    idle_count += 1;
+                if (idle_count == n) {
+                    tick_count += 1;
                 }
             }
-
-            for (int i = 0; i < keys_size; i++) {
-                std::cout << keys[i] << " | " << tasks_map[keys[i]] << ", " << executed_map[keys[i]] << std::endl;
-            }
-            std::cout << "-------------------------" << std::endl;
-            
-            std::cout << "idle_count: " << idle_count << std::endl;
             
             return tick_count;
         }
