@@ -12,7 +12,7 @@
 
 class Solution {
     public:
-        int leastInterval(std::vector<char>& tasks, int n) {
+        static int leastInterval(std::vector<char>& tasks, int n) {
             int res = 0;
             int cycle = n + 1;
             int tasks_size = tasks.size();
