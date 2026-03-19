@@ -122,15 +122,17 @@ class Solution {
             current->left = build_tree_helper(
                 inorder_map, 
                 preorder,
+                //  p_left + 1 到 p_left + len
                 p_left + 1,          // preorder left barrier
                 p_left + i - i_left, // preorder right barrier
                 inorder,
-                i_left,             
+                i_left,              // support select next range
                 i - 1
             );
             current->right = build_tree_helper(
                 inorder_map,
                 preorder,
+                // p_left + i - i_left + 1 ==> p_right
                 p_left + i - i_left + 1,    // right node, preorder left barrier
                 p_right,                    // right node, preorder right barrier
                 inorder,
@@ -149,6 +151,14 @@ class Solution {
             for (int i = 0; i < inorder.size(); i++) {
                 inorder_map[inorder[i]] = i;
             }
-            return build_tree_helper(inorder_map, preorder, 0, preorder.size() - 1, inorder, 0, inorder.size() - 1);
+            return build_tree_helper(
+                inorder_map,
+                preorder,
+                0,
+                preorder.size() - 1,
+                inorder,
+                0,
+                inorder.size() - 1
+            );
         }
 };
