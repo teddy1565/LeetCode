@@ -116,6 +116,7 @@ class Solution {
                 i = 0;
             }
 
+            // choose p_left in preorder
             TreeNode *current = new TreeNode(preorder[p_left]);
 
             current->left = build_tree_helper(
@@ -127,7 +128,15 @@ class Solution {
                 i_left,             
                 i - 1
             );
-            current->right = build_tree_helper(inorder_map, preorder, p_left + i - i_left + 1, p_right, inorder, i + 1, i_right);
+            current->right = build_tree_helper(
+                inorder_map,
+                preorder,
+                p_left + i - i_left + 1,    // right node, preorder left barrier
+                p_right,                    // right node, preorder right barrier
+                inorder,
+                i + 1,
+                i_right
+            );
 
 
             
