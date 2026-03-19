@@ -96,110 +96,27 @@ class Solution {
             4 | 5 | 4
             5 | 4 | 6
          */
-        TreeNode* build_tree_helper(const int preorder_size, const int inorder_size, std::unordered_map<int, int> & inorder_map, std::vector<int> & preorder, int *index, int parent_index) {
-            if ((*index) >= preorder_size) {
+        
+        TreeNode *build_tree_helper(std::vector<int> & preorder, int p_left, int p_right, std::vector<int> & inorder, int i_left, int i_right) {
+            if (p_left > p_right || i_left > i_right) {
                 return nullptr;
             }
 
-            // init root node
-            TreeNode *root = new TreeNode(preorder[(*index)]);
-
-            // get parent node for root node index
-            int root_parent_index_in_inorder = parent_index;
-
-            // root node index in inordermap
-            int inorder_index_for_root = inorder_map[preorder[(*index)]];
-
-            // if (*index) no next, just return
-            if (((*index) + 1) >= preorder_size) {
-                return root;
-            }
-
-            
-
-            // get child node index from preorder
-            int child_node_index = preorder[(*index) + 1];
-
-            // child node inorder index
-            int inorder_index_for_child_node = inorder_map[child_node_index];
-
-
-            if (root_parent_index_in_inorder >= 0) {
-
-                /**
-                 * @brief 
-                 * if inorder_index_for_next_node bigger then root's parent index
-                 * 
-                 * it's means the next node is a same level for root_node in parent right node
-                 * 
-                 */
-                if (inorder_index_for_child_node > root_parent_index_in_inorder) {
-
-                    /**
-                     * @brief 
-                     * 
-                     * if current_next_child_node index < root inorder index
-                     * 
-                     * mean inorder_index_for_root > root_parent_index_in_inorder
-                     * 
-                     */
-                    if (inorder_index_for_child_node < inorder_index_for_root) {
-                        (*index) += 1;
-                        root->left = build_tree_helper(preorder_size, inorder_size, inorder_map, preorder, index, inorder_index_for_root);
-
-                        (*index) += 1;
-                        root->right = build_tree_helper(preorder_size, inorder_size, inorder_map, preorder, index, inorder_index_for_root);
-                    } else if (inorder_index_for_child_node > inorder_index_for_root) {
-                        
-                        // (*index) += 1;
-                        // root->right = build_tree_helper(preorder_size, inorder_size, inorder_map, preorder, index, root_parent_index_in_inorder);
-                    }
-                    return root;
-                } else {
-                    if (inorder_index_for_child_node < inorder_index_for_root) {
-                        (*index) += 1;
-                        root->left = build_tree_helper(preorder_size, inorder_size, inorder_map, preorder, index, inorder_index_for_root);
-
-                        (*index) += 1;
-                        root->right = build_tree_helper(preorder_size, inorder_size, inorder_map, preorder, index, inorder_index_for_root);
-                    } else {
-                        // (*index) += 1;
-                        // root->right = build_tree_helper(preorder_size, inorder_size, inorder_map, preorder, index, root_parent_index_in_inorder);
-                    }
-
-                    return root;
+            int i = 0;
+            for (i = i_left; i <= i_right; i++) {
+                if (preorder[p_left] == inorder[i]) {
+                    break;
                 }
             }
 
-            if (inorder_index_for_child_node < inorder_index_for_root) {
-                (*index) += 1;
-                root->left = build_tree_helper(preorder_size, inorder_size, inorder_map, preorder, index, inorder_index_for_root);
-
-                (*index) += 1;
-                root->right = build_tree_helper(preorder_size, inorder_size, inorder_map, preorder, index, inorder_index_for_root);
-            } else {
-                (*index) += 1;
-                root->right = build_tree_helper(preorder_size, inorder_size, inorder_map, preorder, index, root_parent_index_in_inorder);
-            }
-
-            return root;
-
+            TreeNode *current = new TreeNode(preorder[p_left]);
+            current->left = build_tree_helper(preorder, p_left + 1, p_left + i - i_left, inorder, i_left, i - 1);
+            current->right = build_tree_helper(preorder, p_left + i - i_left + 1, p_right, inorder, i + 1, i_right);
+            return current;
         }
 
     public:
         TreeNode* buildTree(std::vector<int>& preorder, std::vector<int>& inorder) {
-
-            std::unordered_map<int, int> inorder_map;
-            int preorder_size = preorder.size();
-            int inorder_size = inorder.size();
-
-            int index = 0;
-            
-            for (int i = 0; i < inorder_size; i++) {
-                inorder_map[inorder[i]] = i;
-            }
-            
-            TreeNode *root = this->build_tree_helper(preorder_size, inorder_size, inorder_map, preorder, &index, -1);
-            return root;
+            return build_tree_helper(preorder, 0, preorder.size() - 1, inorder, 0, inorder.size() - 1);
         }
 };
