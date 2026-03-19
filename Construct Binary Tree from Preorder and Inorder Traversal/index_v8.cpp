@@ -97,26 +97,29 @@ class Solution {
             5 | 4 | 6
          */
         
-        TreeNode *build_tree_helper(std::vector<int> & preorder, int p_left, int p_right, std::vector<int> & inorder, int i_left, int i_right) {
+        TreeNode *build_tree_helper(std::unordered_map<int, int> & inorder_map, std::vector<int> & preorder, int p_left, int p_right, std::vector<int> & inorder, int i_left, int i_right) {
             if (p_left > p_right || i_left > i_right) {
                 return nullptr;
             }
 
-            int i = 0;
-            for (i = i_left; i <= i_right; i++) {
-                if (preorder[p_left] == inorder[i]) {
-                    break;
-                }
+            int i = inorder_map[preorder[p_left]];
+            
+            if (i < i_left || i > i_right) {
+                i = 0;
             }
 
             TreeNode *current = new TreeNode(preorder[p_left]);
-            current->left = build_tree_helper(preorder, p_left + 1, p_left + i - i_left, inorder, i_left, i - 1);
-            current->right = build_tree_helper(preorder, p_left + i - i_left + 1, p_right, inorder, i + 1, i_right);
+            current->left = build_tree_helper(inorder_map, preorder, p_left + 1, p_left + i - i_left, inorder, i_left, i - 1);
+            current->right = build_tree_helper(inorder_map, preorder, p_left + i - i_left + 1, p_right, inorder, i + 1, i_right);
             return current;
         }
 
     public:
         TreeNode* buildTree(std::vector<int>& preorder, std::vector<int>& inorder) {
-            return build_tree_helper(preorder, 0, preorder.size() - 1, inorder, 0, inorder.size() - 1);
+            std::unordered_map<int, int> inorder_map;
+            for (int i = 0; i < inorder.size(); i++) {
+                inorder_map[inorder[i]] = i;
+            }
+            return build_tree_helper(inorder_map, preorder, 0, preorder.size() - 1, inorder, 0, inorder.size() - 1);
         }
 };
