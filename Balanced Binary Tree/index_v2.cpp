@@ -32,7 +32,7 @@ struct TreeNode {
  */
 class Solution {
     private:
-        int node_height(TreeNode *root, bool * current_status, int current_height) {
+        static int node_height(TreeNode *root, bool * current_status, int current_height) {
             if (root == nullptr || (*current_status) == false) {
                 return current_height;
             }
@@ -48,16 +48,15 @@ class Solution {
         
         }
     public:
-        bool isBalanced(TreeNode* root) {
+        static bool isBalanced(TreeNode* root) {
             if (root == nullptr) {
                 return true;
             }
 
-            int left_height = 0;
-            int right_height = 0;
+            bool ans = true;
 
-            node_height(root, &left_height, &right_height);
+            node_height(root, &ans, 0);
             
-            return true;
+            return ans;
         }
 };
