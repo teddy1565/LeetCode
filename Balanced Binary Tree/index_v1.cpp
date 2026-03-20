@@ -32,7 +32,7 @@ struct TreeNode {
  */
 class Solution {
     private:
-        int node_height(TreeNode *root, int current_height) {
+        static int node_height(TreeNode *root, int current_height) {
             if (root == nullptr) {
                 return current_height;
             }
@@ -40,7 +40,7 @@ class Solution {
             return std::max(node_height(root->left, current_height + 1), node_height(root->right, current_height + 1));
         }
     public:
-        bool isBalanced(TreeNode* root) {
+        static bool isBalanced(TreeNode* root) {
             if (root == nullptr) {
                 return true;
             }
@@ -49,7 +49,7 @@ class Solution {
             if (ans > 1) {
                 return false;
             }
-            
+
             return true;
         }
 };
