@@ -9,6 +9,7 @@
 #include <deque>
 #include <cmath>
 #include <stack>
+#include <array>
 
 
 /**
@@ -18,16 +19,90 @@
  * int param_2 = obj->count(point);
  */
 class DetectSquares {
+    private:
+
+        std::unordered_map<int, std::unordered_map<int, int>> data_points_x;
+        std::unordered_map<int, std::unordered_map<int, int>> data_points_y;
+        
     public:
         DetectSquares() {
-            
         }
         
         void add(std::vector<int> point) {
-            
+            if (data_points_x.find(point[0]) == data_points_x.end()) {
+                data_points_x[point[0]] = std::unordered_map<int, int>();
+            }
+            if (data_points_x[point[0]].find(point[1]) == data_points_x[point[0]].end()) {
+                data_points_x[point[0]][point[1]] = 0;
+            }
+            data_points_x[point[0]][point[1]] += 1;
+
+
+            if (data_points_y.find(point[1]) == data_points_y.end()) {
+                data_points_y[point[1]] = std::unordered_map<int, int>();
+            }
+            if (data_points_y[point[1]].find(point[0]) == data_points_y[point[1]].end()) {
+                data_points_y[point[1]][point[0]] = 0;
+            }
+            data_points_y[point[1]][point[0]] += 1;
         }
         
         int count(std::vector<int> point) {
+
+            // find in same x Axis
+            if (data_points_x.find(point[0]) == data_points_x.end()) {
+                return 0;
+            }
+
+            // find in same y Axis
+            if (data_points_y.find(point[1]) == data_points_y.end()) {
+                return 0;
+            }
+
+            /**
+             * @brief 存放查找x軸出現的y軸長度結果
+             * 
+             */
+            std::unordered_map<int, int> x_axis_length;
             
+            /**
+             * @brief 存放查找同個y軸上出現的x軸長度結果
+             * 
+             */
+            std::unordered_map<int, int> y_axis_length;
+
+            for (auto x : (data_points_x[point[0]])) {
+                x_axis_length[x.first] = std::abs(point[1] - x.first);
+            }
+
+            for (auto y : (data_points_y[point[1]])) {
+                y_axis_length[y.first] = std::abs(point[0] - y.first);
+            }
+
+            std::vector<std::pair<int, int>> search_list;
+
+            for (auto x : x_axis_length) {
+                for (auto y : y_axis_length) {
+                    if (x.second == y.second) {
+                        if (y.first == point[0] && x.first == point[1]) {
+                            continue;
+                        }
+                        search_list.push_back(std::pair<int, int>(y.first, x.first));
+                    }
+                }
+            }
+
+            int max_count = 0;
+
+            for (auto cordinate : search_list) {
+                if (
+                    (data_points_x.find(cordinate.first) != data_points_x.end()) && 
+                    (data_points_x[cordinate.first].find(cordinate.second) != data_points_x[cordinate.second].end())
+                ) {
+                    max_count += data_points_x[cordinate.first][cordinate.second] * data_points_x[point[0]][cordinate.second] * data_points_x[cordinate.first][point[1]];
+                }
+            }
+
+            return max_count;
         }
 };
