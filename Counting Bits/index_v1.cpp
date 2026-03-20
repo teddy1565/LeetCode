@@ -15,7 +15,7 @@ class Solution {
     private:
         static int count_bit(int n) {
             int k = 0;
-            for (int i = 0; i < 31; i++) {
+            for (int i = 0; i < 17; i++) {
                 
                 if (n & 1) {
                     k += 1;
