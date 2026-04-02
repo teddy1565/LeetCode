@@ -66,7 +66,6 @@ class Solution {
                         } else if (p[i] == s[j]) {
                             dp[i][j] = true;
                             i -= 1;
-                            j -= 1;
                         } else if (p[i] != s[j]) {
                             return false;
                         }
