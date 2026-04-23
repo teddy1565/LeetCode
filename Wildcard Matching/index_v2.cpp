@@ -42,7 +42,7 @@ class Solution {
                 }
             }
 
-            while (j < p_size && p[j] == '+') {
+            while (j < p_size && p[j] == '*') {
                 ++j;
             }
 
