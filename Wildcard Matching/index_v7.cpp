@@ -12,7 +12,7 @@
 #include <array>
 #include <set>
 #include <numeric>
-
+// 0ms beats then 100% | 9.67MB beats then 91.52%
 // acdcb | a*c?b
 // abcde | *a*b*c*d*e*
 // abefcdgiescdf | ab*cd?i*f
