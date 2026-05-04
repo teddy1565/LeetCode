@@ -53,6 +53,6 @@ class Solution {
         }
     public:
         bool isMatch(std::string s, std::string p) {
-            return false;
+            return helper(s, p, 0, 0) > 1;
         }
 };
