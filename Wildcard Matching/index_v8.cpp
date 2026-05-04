@@ -37,14 +37,16 @@ class Solution {
                         dp[i][j] = 
                             dp[i - 1][j] || dp[i][j - 1];
                     } else {
+
                         bool char_is_match =
-                            s[i - 1] == p[j - 1] ||
-                            p[j - 1] == '?';
+                            s[i - 1] == p[j - 1] || p[j - 1] == '?';
                      
                         
                         dp[i][j] = char_is_match && dp[i - 1][j - 1];
                     }
                 }
             }
+
+            return dp[s_size][p_size];
         }
 };
