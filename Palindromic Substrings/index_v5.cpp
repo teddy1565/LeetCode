@@ -17,29 +17,25 @@
 // aaa d
 // aaa
 class Solution {
-    private:
-        static void helper(std::string & s, int a, int b, int & ans) {
-            while (a >= 0 && b < s.size() && s[a] == s[b]) {
-                a--;
-                b++;
-                ans += 1;
-            }
-        }
     public:
         static int countSubstrings(std::string s) {
             if (s.empty()) {
                 return 0;
             }
-
+            
             int n = s.size();
             int ans = 0;
+            std::vector<std::vector<bool>> dp(n, std::vector<bool>(n, false));
 
-            // O(n)
-            for (int i = 0; i < n; i++) {
-                // O(m)
-                helper(s, i, i, ans);
-                helper(s, i, i + 1, ans);
+            for (int i = n - 1; i >= 0; i--) {
+                for (int j = i; j < n; j++) {
+                    dp[i][j] = (s[i] == s[j]) && (j - i <= 2 || dp[i + 1][j - 1]);
+                    if (dp[i][j]) {
+                        ans += 1;
+                    }
+                }
             }
+
             return ans;
         }
 };
