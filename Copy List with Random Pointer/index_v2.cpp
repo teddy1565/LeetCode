@@ -1,0 +1,90 @@
+#include <iostream>
+#include <vector>
+#include <list>
+#include <string>
+#include <unordered_map>
+#include <map>
+#include <algorithm>
+#include <queue>
+#include <deque>
+#include <cmath>
+#include <stack>
+#include <array>
+#include <set>
+#include <numeric>
+
+class Node {
+    public:
+        int val;
+        Node* next;
+        Node* random;
+        
+        Node(int _val) {
+            val = _val;
+            next = NULL;
+            random = NULL;
+        }
+};
+
+/**
+ * @brief 
+ * 
+ * we can observe the pattern
+ * 
+ * next always pointer to next, no loopback
+ * 
+ * 
+ */
+class Solution {
+    public:
+        Node* copyRandomList(Node* head) {
+            if (head == nullptr) {
+                return nullptr;
+            }
+           
+            std::unordered_map<Node *, Node *> hash_map;
+            Node* p = head;
+            while (p != nullptr) {
+                hash_map[p] = nullptr;
+                p = p->next;
+            }
+            
+            Node* answer_head = new Node(head->val);
+            Node* t = answer_head;
+
+            p = head;
+
+            hash_map[p] = t;
+
+            while (p != nullptr) {
+                if (p->next != nullptr) {
+                    if (hash_map[p->next] == nullptr) {
+                        t->next = new Node(p->next->val);
+                        hash_map[p->next] = t->next;
+                    } else {
+                        t->next = hash_map[p->next];
+                    }
+                }
+
+                if (p->random == p) {
+                    t->random = t;
+                } else if (p->random != nullptr) {
+                    
+                    if (hash_map[p->random] == nullptr) {
+                        t->random = new Node(p->random->val);
+                        hash_map[p->random] = t->random;
+                    } else {
+                        t->random = hash_map[p->random];
+                    }
+                } else {
+                    t->random = nullptr;
+                }
+
+                p = p->next;
+                t = t->next;
+            }
+            
+
+            return answer_head;
+        }
+};
