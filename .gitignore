@@ -3,3 +3,6 @@
 !*.c
 !*.h
 !*.cpp
+.vscode
+.claude
+.DS_Store
