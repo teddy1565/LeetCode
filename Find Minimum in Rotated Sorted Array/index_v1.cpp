@@ -15,43 +15,28 @@
 #include <unordered_set>
 #include <charconv>
 
-// 乘法交換律
-// 好像跟coin或股票題目有點像
-// [5, 7, -2,    5,   -33, 0, -98, 2, -3]
-//  5. 35 2     10  11550 0 1  , 2
-// -1 -1  35   -350 -165  0 -98, -196
+// Suppose an array of length n sorted in ascending order is rotated between 1 and n times. For example, the array nums = [0,1,2,4,5,6,7] might become:
 
-/**
- *      a1      a2                 a3  
- * x    x1   x2 = (a2 * x1)
- * y    y1   y2 = (a2 * x1 * y1)
- * 
- */
+// [4,5,6,7,0,1,2] if it was rotated 4 times.
+// [0,1,2,4,5,6,7] if it was rotated 7 times.
+// Notice that rotating an array [a[0], a[1], a[2], ..., a[n-1]] 1 time results in the array [a[n-1], a[0], a[1], a[2], ..., a[n-2]].
 
- // 35 * -2 * 5 * -33 * 98 * -98
+// Given the sorted rotated array nums of unique elements, return the minimum element of this array.
 
- // [5, 7,  -2,  5,      -33,    98,     -98,     0, -3]
- //  5  7   -2
-//   5  35  -14
-//.  5. 35
-
-
-//    5
-
-
-//max;35 35
-
-//      [   5,  7,    -2,       5,      -33,    98,     -98,    0,  -3  ]
-// 1        1   5     7        5       -33     98     -98
-// 1        5   35    -14      -10      -165    -3234   -9604
-// 1        5   35    -490    140     1650   533610 31059336
-
-//      [2, 3, -2, 4]
-// 1    2   6   1  4
-// 1    1   1   -2 -2
+// You must write an algorithm that runs in O(log n) time.
 class Solution {
     public:
         int findMin(std::vector<int>& nums) {
+
+            int nums_size = nums.size();
+            if (nums_size == 1) {
+                return nums[0];
+            }
+            
+            int mid_num = (nums[0] + nums[nums_size - 1]) / 2;
+
+            
+            return 0;
             
         }
 };
