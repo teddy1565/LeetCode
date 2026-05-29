@@ -29,14 +29,20 @@ class Solution {
         int findMin(std::vector<int>& nums) {
 
             int nums_size = nums.size();
-            if (nums_size == 1) {
-                return nums[0];
+            
+            int left = 0;
+            int right = nums_size - 1;
+
+            while (left < right) {
+                int mid = left + (right - left) / 2;
+                if (nums[mid] > nums[right]) {
+                    left = mid + 1;
+                } else {
+                    right = mid;
+                }
             }
             
-            int mid_num = (nums[0] + nums[nums_size - 1]) / 2;
-
-            
-            return 0;
+            return nums[right];
             
         }
 };
